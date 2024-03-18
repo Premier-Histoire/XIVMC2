@@ -17,7 +17,7 @@
             <div class="result-item" v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
               :class="{ 'last-item': index === searchResults.length - 1 }">
               <div class="item-icon">
-                <img :src="`/src/assets/img/icons/normal/${item.Icon}.png`" :loading="lazy" alt="Icon">
+                <img :src="`./assets/img/icons/${item.Icon}.png`" :loading="lazy" alt="Icon">
               </div>
               <div class="result-name">{{ item.Name }}</div>
               <div class="loadstone">
