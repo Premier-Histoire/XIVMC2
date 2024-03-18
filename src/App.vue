@@ -95,7 +95,7 @@ export default {
       }
     },
     async getImagePath(variable) {
-      const imageModule = await import(`./assets/img/icon/normal/${variable}.png`);
+      const imageModule = await import(`./assets/img/icons/normal/${variable}.png`);
       this.imageSrc = imageModule.default;
       return this.imageSrc
     },
