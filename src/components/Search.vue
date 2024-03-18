@@ -522,9 +522,6 @@ export default {
         new Tooltip(document.body, {
             selector: "[data-bs-toggle='tooltip']",
         });
-        onMounted(() => {
-            this.myModal = new Modal(this.$refs.myModal);
-        });
     },
     methods: {
         openModal() {
