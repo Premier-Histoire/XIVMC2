@@ -1,13 +1,13 @@
 <template>
-    <div class="info">
+    <div v-if="info" class="info">
         <div class="detail-info">
-            <div v-if="info.Name !== undefined" class="info-img">
-                <img :src="info.iconHrUrl" alt="アイコン" loading="lazy">
+            <div class="info-img">
+                <img v-if="info.Name !== undefined" :src="`/icons/HR/${info.Icon}_hr1.png`" alt="アイコン" loading="lazy">
             </div>
-            <div v-if="info.Name !== undefined" class="info-name">
+            <div class="info-name" v-if="info.Name !== undefined">
                 {{ info.Name }}
             </div>
-            <div v-if="info.Name !== undefined" class="info-clip" @click="copyToClipboard" data-bs-toggle="tooltip"
+            <div class="info-clip" v-if="info.Name !== undefined" @click="copyToClipboard" data-bs-toggle="tooltip"
                 data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-offset="0, 10" title="アイテム名をコピーします。">
                 <i class="far fa-copy fa-lg"></i>
             </div>
@@ -28,14 +28,10 @@
         </div>
 
         <div class="details">
-            <div v-if="activeButton === 1">
-                <!-- 素材情報の表示 -->
-                <!-- 例えば、以下に素材情報のコンテンツを記述 -->
+            <div v-if="activeButton === 1 && info.Name !== undefined">
                 <p>ここに素材情報が表示されます。</p>
             </div>
-            <div v-else-if="activeButton === 2">
-                <!-- 相場情報の表示 -->
-                <!-- 例えば、以下に相場情報のコンテンツを記述 -->
+            <div v-else-if="activeButton === 2 && info.Name !== undefined">
                 <p>ここに相場情報が表示されます。</p>
             </div>
         </div>
@@ -43,15 +39,19 @@
 </template>
 
 <script>
-import { Tooltip } from 'bootstrap'
+import { Tooltip } from 'bootstrap';
 
 export default {
     props: {
-        info: Object,
+        materialsJson: {
+            type: String,
+            required: true
+        }
     },
     data() {
         return {
-            activeButton: 1
+            activeButton: 1,
+            info: [],
         }
     },
     mounted() {
@@ -83,11 +83,16 @@ export default {
             } else if (buttonNumber === 2) {
                 this.activeButton = 2;
             }
+        },
+        someFunction(data) {
+            this.info = data
+        },
+        getmaterial() {
+
         }
     }
 }
 </script>
-
 <style>
 .info {
     display: flex;
@@ -179,7 +184,7 @@ export default {
 
 .details {
     width: calc(100% - 6px);
-    height: calc(100vh - 195px);
+    height: calc(100vh - 220px);
     background-color: rgb(70, 95, 95, 0.3);
     color: white;
 }

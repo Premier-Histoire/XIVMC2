@@ -17,7 +17,7 @@
             <div class="result-item" v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
               :class="{ 'last-item': index === searchResults.length - 1 }">
               <div class="item-icon">
-                <img :src="`/icons/normal/${item.Icon}.png`" :loading="lazy" alt="Icon">
+                <img :src="`/icons/normal/${item.Icon}.png`" alt="Icon">
               </div>
               <div class="result-name">{{ item.Name }}</div>
               <div class="loadstone">
@@ -38,7 +38,7 @@
       <div class="info-header">
         <div class="info-text">詳細情報</div>
       </div>
-      <Info :info="selectedInfo" />
+      <Info ref="infoComponent" :materialsJson="materialsJson" />
     </div>
   </div>
 </template>
@@ -59,6 +59,7 @@ export default {
       searchQuery: '',
       searchinfo: [],
       imageSrc: '',
+      materialsJson: ''
     }
   },
   components: {
@@ -99,16 +100,6 @@ export default {
       const imageModule = await import(`@/assets/img/${variable}.png`);
       this.imageSrc = imageModule.default;
     },
-    getIconUrl(imageId) {
-      const baseId = Math.floor(imageId / 1000) * 1000; // 1万の位を基にベースIDを算出
-      const formattedImageId = imageId.toString().padStart(6, '0'); // 画像IDを6桁でフォーマット
-      return `https://xivapi.com/i/0${baseId}/${formattedImageId}.png`; // 完全なURLを生成
-    },
-    getIconHRUrl(imageId) {
-      const baseId = Math.floor(imageId / 1000) * 1000; // 1万の位を基にベースIDを算出
-      const formattedImageId = imageId.toString().padStart(6, '0'); // 画像IDを6桁でフォーマット
-      return `https://xivapi.com/i/0${baseId}/${formattedImageId}_hr1.png`; // 完全なURLを生成
-    },
     isCraftable(itemKey) {
       return this.recipeData.some(recipe => recipe.ItemResult === itemKey);
     },
@@ -121,8 +112,6 @@ export default {
           item.Name.includes(searchQuery)
         ).map(item => ({
           ...item,
-          iconUrl: this.getIconUrl(item.Icon),
-          iconHrUrl: this.getIconHRUrl(item.Icon),
           isCraftable: this.isCraftable(item.ItemId)
         }))
       } catch (error) {
@@ -151,8 +140,6 @@ export default {
           }
         }).map(item => ({
           ...item,
-          iconUrl: this.getIconUrl(item.Icon),
-          iconHrUrl: this.getIconHRUrl(item.Icon),
           isCraftable: this.isCraftable(item.ItemId)
         }));
         console.log(this.searchResults)
@@ -171,9 +158,42 @@ export default {
       return matchingIds;
     },
     selectItem(item) {
-      this.selectedInfo = item
-      console.log(this.selectedInfo)
+      this.selectedInfo = item;
+      this.$refs.infoComponent.someFunction(this.selectedInfo);
+      this.getMaterialDetails(item);
     },
+    async getMaterialDetails(item) {
+      const retrieveMaterials = async (itemId, quantity) => {
+        const recipe = this.recipeData.find(recipe => recipe.ItemResult === itemId);
+        if (recipe) {
+          const materials = [];
+          for (let i = 0; i <= 9; i++) {
+            const ingredientItemId = recipe[`ItemIngredient[${i}]`];
+            const ingredientQuantity = recipe[`AmountIngredient[${i}]`];
+            if (ingredientItemId && ingredientQuantity > 0) {
+              const materialItem = this.itemsData.find(item => item.ItemId === ingredientItemId);
+              if (materialItem) {
+                const subMaterials = await retrieveMaterials(ingredientItemId, ingredientQuantity);
+                materials.push({
+                  itemId: ingredientItemId,
+                  itemName: materialItem.Name,
+                  quantity: ingredientQuantity,
+                  isCraftable: this.isCraftable(ingredientItemId),
+                  subMaterials: subMaterials
+                });
+              }
+            }
+          }
+          return materials;
+        } else {
+          return [];
+        }
+      };
+
+      const materials = await retrieveMaterials(item.ItemId, 1);
+      const materialsJson = JSON.stringify(materials);
+      console.log(materialsJson);
+    }
   }
 }
 </script>

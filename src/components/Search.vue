@@ -1,6 +1,9 @@
 <template>
     <div class="title">
         <img src="../assets/img/title.png">
+        <div class="setting" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <i class="fas fa-cog fa-lg"></i>
+        </div>
     </div>
     <div class="freesearch">
         <div class="subtext">FREE SEARCH</div>
@@ -462,10 +465,48 @@
             </button>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">設定</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="data-center-select" class="col-form-label">Data Center:</label>
+                            <select class="form-select" id="data-center-select">
+                                <option value="data-center-1">Data Center 1</option>
+                                <option value="data-center-2">Data Center 2</option>
+                                <option value="data-center-3">Data Center 3</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="server-select" class="col-form-label">Server:</label>
+                            <select class="form-select" id="server-select">
+                                <option value="server-1">Server 1</option>
+                                <option value="server-2">Server 2</option>
+                                <option value="server-3">Server 3</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <script>
 import { Tooltip } from 'bootstrap'
+import { Modal } from 'bootstrap'
 
 export default {
     emits: ['send-data'],
@@ -480,9 +521,15 @@ export default {
     mounted() {
         new Tooltip(document.body, {
             selector: "[data-bs-toggle='tooltip']",
-        })
+        });
+        onMounted(() => {
+            this.myModal = new Modal(this.$refs.myModal);
+        });
     },
     methods: {
+        openModal() {
+            this.myModal.show();
+        },
         incrementLevel(target) {
             // レベルを増やす
             if (target === 'main') {
@@ -531,10 +578,19 @@ export default {
 
 <style scoped>
 .title {
+    position: relative;
     width: 100%;
     height: 40px;
     display: flex;
     justify-content: center;
+}
+
+.setting {
+    position: absolute;
+    color: white;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
 }
 
 .title img {
