@@ -477,31 +477,39 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="data-center-select" class="col-form-label">Data Center:</label>
-                            <select class="form-select" id="data-center-select">
-                                <option value="data-center-1">Data Center 1</option>
-                                <option value="data-center-2">Data Center 2</option>
-                                <option value="data-center-3">Data Center 3</option>
+                            <label for="data-center-select" class="col-form-label">物理データセンター:</label>
+                            <select class="form-select" v-model="selectedPhysicalDataCenter">
+                                <option value="">空白</option>
+                                <option v-for="(physicalDataCenter, index) in physicalDataCenters"
+                                    :value="physicalDataCenter" :key="index">{{ physicalDataCenter }}</option>
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" v-if="selectedPhysicalDataCenter">
+                            <label for="data-center-select" class="col-form-label">論理データセンター:</label>
+                            <select class="form-select" v-model="selectedLogicalDataCenter">
+                                <option value="">空白</option>
+                                <option
+                                    v-for="(logicalDataCenter, index) in logicalDataCenters[selectedPhysicalDataCenter]"
+                                    :value="logicalDataCenter" :key="index">{{ logicalDataCenter }}</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" v-if="selectedLogicalDataCenter">
                             <label for="server-select" class="col-form-label">Server:</label>
-                            <select class="form-select" id="server-select">
-                                <option value="server-1">Server 1</option>
-                                <option value="server-2">Server 2</option>
-                                <option value="server-3">Server 3</option>
+                            <select class="form-select" v-model="selectedServer">
+                                <option value="">空白</option>
+                                <option v-for="(server, index) in servers[selectedLogicalDataCenter]" :value="server"
+                                    :key="index">{{ server }}</option>
                             </select>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send message</button>
+                    <button type="button" class="btn btn-primary" @click="cacheSelection">Send message</button>
                 </div>
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
@@ -515,7 +523,30 @@ export default {
             searchQuery: '',
             mainArmSubArmLevel: 1,
             armorAccessoryLevel: 1,
-            selectedJob: 'ADV'
+            selectedJob: 'ADV',
+            selectedPhysicalDataCenter: 'Japan',
+            selectedLogicalDataCenter: 'Mana',
+            selectedServer: 'Chocobo',
+            physicalDataCenters: ['Europe', 'Japan', 'America', 'Oceania'],
+            logicalDataCenters: {
+                'Europe': ['Chaos', 'Light'],
+                'Japan': ['Elemental', 'Gaia', 'Mana', 'Meteor'],
+                'America': ['Aether', 'Primal', 'Crystal', 'Dynamis'],
+                'Oceania': ['Materia']
+            },
+            servers: {
+                'Chaos': ['Cerberus', 'Louisoix', 'Moogle', 'Omega', 'Phantom', 'Ragnarok', 'Sagittarius', 'Spriggan'],
+                'Light': ['Alpha', 'Lich', 'Odin', 'Phoenix', 'Raiden', 'Shiva', 'Twintania', 'Zodiark'],
+                'Elemental': ['Aegis', 'Atomos', 'Carbuncle', 'Garuda', 'Gungnir', 'Kujata', 'Tonberry', 'Typhon'],
+                'Gaia': ['Alexander', 'Bahamut', 'Durandal', 'Fenrir', 'Ifrit', 'Ridill', 'Tiamat', 'Ultima'],
+                'Mana': ['Anima', 'Asura', 'Chocobo', 'Hades', 'Ixion', 'Masamune', 'Pandaemonium', 'Titan'],
+                'Meteor': ['Belias', 'Mandragora', 'Ramuh', 'Shinryu', 'Unicorn', 'Valefor', 'Yojimbo', 'Zeromus'],
+                'Aether': ['Adamantoise', 'Cactuar', 'Faerie', 'Gilgamesh', 'Jenova', 'Midgardsormr', 'Sargatanas', 'Siren'],
+                'Primal': ['Behemoth', 'Excalibur', 'Exodus', 'Famfrit', 'Hyperion', 'Lamia', 'Leviathan', 'Ultros'],
+                'Crystal': ['Balmung', 'Brynhildr', 'Coeurl', 'Diabolos', 'Goblin', 'Malboro', 'Mateus', 'Zalera'],
+                'Dynamis': ['Halicarnassus', 'Maduin', 'Marilith', 'Seraph'],
+                'Materia': ['Bismarck', 'Ravana', 'Sephirot', 'Sophia', 'Zurvan']
+            }
         }
     },
     mounted() {
@@ -567,6 +598,53 @@ export default {
         ItemSearch() {
             if (this.searchQuery.trim() !== '') {
                 this.$emit('send-data', 'freeSearch', '0', this.searchQuery)
+            }
+        },
+        cacheSelection() {
+            if (this.selectedLogicalDataCenter === '') {
+                localStorage.setItem('searchvalue', this.selectedPhysicalDataCenter);
+            }
+            if (this.selectedServer === '') {
+                localStorage.setItem('searchvalue', this.selectedLogicalDataCenter);
+            } else {
+                localStorage.setItem('searchvalue', this.selectedServer);
+            }
+
+            localStorage.setItem('selectedPhysicalDataCenter', this.selectedPhysicalDataCenter);
+            localStorage.setItem('selectedLogicalDataCenter', this.selectedLogicalDataCenter);
+            localStorage.setItem('selectedServer', this.selectedServer);
+        }
+    },
+    created() {
+        this.selectedPhysicalDataCenter = localStorage.getItem('selectedPhysicalDataCenter') || '';
+        this.selectedLogicalDataCenter = localStorage.getItem('selectedLogicalDataCenter') || '';
+        this.selectedServer = localStorage.getItem('selectedServer') || '';
+    },
+    watch: {
+        selectedPhysicalDataCenter: function (newVal, oldVal) {
+            if (newVal === 'JAPAN') {
+                this.logicalDataCenters = [
+                    { label: 'Elemental', value: 'Elemental' },
+                    { label: 'Gaia', value: 'Gaia' },
+                    { label: 'Mana', value: 'Mana' },
+                    { label: 'Meteor', value: 'Meteor' }
+                ];
+            } else if (newVal === 'Europe') {
+                this.logicalDataCenters = [
+                    { label: 'Aether', value: 'Aether' },
+                    { label: 'Crystal', value: 'Crystal' },
+                    { label: 'Dynamis', value: 'Dynamis' },
+                    { label: 'Primal', value: 'Primal' }
+                ];
+            } else if (newVal === 'America') {
+                this.logicalDataCenters = [
+                    { label: 'Chaos', value: 'Chaos' },
+                    { label: 'Light', value: 'Light' }
+                ];
+            } else if (newVal === 'Oceania') {
+                this.logicalDataCenters = [
+                    { label: 'Materia', value: 'Materia' },
+                ];
             }
         }
     }
