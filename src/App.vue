@@ -17,7 +17,7 @@
             <div class="result-item" v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
               :class="{ 'last-item': index === searchResults.length - 1 }">
               <div class="item-icon">
-                <img :src="getImagePath(item.Icon)" :loading="lazy" alt="Icon">
+                <img :src="`/src/assets/img/icons/normal/${item.Icon}.png`" :loading="lazy" alt="Icon">
               </div>
               <div class="result-name">{{ item.Name }}</div>
               <div class="loadstone">
@@ -95,9 +95,9 @@ export default {
       }
     },
     async getImagePath(variable) {
-      const imageModule = await import(`./assets/img/icons/normal/${variable}.png`);
+      // 画像のパスを動的に読み込む
+      const imageModule = await import(`@/assets/img/${variable}.png`);
       this.imageSrc = imageModule.default;
-      return this.imageSrc
     },
     getIconUrl(imageId) {
       const baseId = Math.floor(imageId / 1000) * 1000; // 1万の位を基にベースIDを算出
