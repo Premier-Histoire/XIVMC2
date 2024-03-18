@@ -504,8 +504,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @click="cacheSelection">Send message</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+                    <button type="button" class="btn btn-primary" @click="cacheSelection">保存</button>
                 </div>
             </div>
         </div>
@@ -616,37 +616,9 @@ export default {
         }
     },
     created() {
-        this.selectedPhysicalDataCenter = localStorage.getItem('selectedPhysicalDataCenter') || '';
-        this.selectedLogicalDataCenter = localStorage.getItem('selectedLogicalDataCenter') || '';
-        this.selectedServer = localStorage.getItem('selectedServer') || '';
-    },
-    watch: {
-        selectedPhysicalDataCenter: function (newVal, oldVal) {
-            if (newVal === 'JAPAN') {
-                this.logicalDataCenters = [
-                    { label: 'Elemental', value: 'Elemental' },
-                    { label: 'Gaia', value: 'Gaia' },
-                    { label: 'Mana', value: 'Mana' },
-                    { label: 'Meteor', value: 'Meteor' }
-                ];
-            } else if (newVal === 'Europe') {
-                this.logicalDataCenters = [
-                    { label: 'Aether', value: 'Aether' },
-                    { label: 'Crystal', value: 'Crystal' },
-                    { label: 'Dynamis', value: 'Dynamis' },
-                    { label: 'Primal', value: 'Primal' }
-                ];
-            } else if (newVal === 'America') {
-                this.logicalDataCenters = [
-                    { label: 'Chaos', value: 'Chaos' },
-                    { label: 'Light', value: 'Light' }
-                ];
-            } else if (newVal === 'Oceania') {
-                this.logicalDataCenters = [
-                    { label: 'Materia', value: 'Materia' },
-                ];
-            }
-        }
+        this.selectedPhysicalDataCenter = localStorage.getItem('selectedPhysicalDataCenter') || 'Japan';
+        this.selectedLogicalDataCenter = localStorage.getItem('selectedLogicalDataCenter') || 'Mana';
+        this.selectedServer = localStorage.getItem('selectedServer') || 'CChocobo';
     }
 }
 </script>
