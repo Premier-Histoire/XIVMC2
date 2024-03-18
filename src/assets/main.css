@@ -1,0 +1,33 @@
+@import './base.css';
+
+@font-face {
+  font-family: 'NotoSansJP';
+  src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap') format('truetype');
+}
+
+#app {
+  font-family: "Noto Sans JP", sans-serif;
+  width: calc(100% - 70px);
+  height: calc(100vh - 70px);
+  margin: 35px 35px;
+  overflow: hidden;
+}
+
+body {
+  min-height: 0 !important;
+}
+
+.scroll_bar{
+  overflow-y: scroll;
+}
+.scroll_bar::-webkit-scrollbar{
+  width: 5px;
+  border-radius: 6px;
+}
+.scroll_bar::-webkit-scrollbar-track{
+  background-color: none;
+}
+.scroll_bar::-webkit-scrollbar-thumb{
+  background-color: #807d80;
+  border-radius: 6px;
+}
