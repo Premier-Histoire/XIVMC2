@@ -162,6 +162,16 @@ export default {
       this.$refs.infoComponent.someFunction(this.selectedInfo);
       this.getMaterialDetails(item);
     },
+    async getLowestPrice(itemId) {
+            const server = localStorage.getItem('searchvalue')
+            const response = await fetch(`https://universalis.app/api/${server}/${itemId}`);
+            const data = await response.json();
+            if (data.minPriceHQ === 0) {
+                return data.minPrice;
+            } else {
+                return data.minPriceHQ;
+            }
+        },
     async getMaterialDetails(item) {
       const retrieveMaterials = async (itemId, quantity) => {
         const recipe = this.recipeData.find(recipe => recipe.ItemResult === itemId);
@@ -178,6 +188,7 @@ export default {
                   itemId: ingredientItemId,
                   itemName: materialItem.Name,
                   quantity: ingredientQuantity,
+                  price:  await this.getLowestPrice(ingredientItemId),
                   isCraftable: this.isCraftable(ingredientItemId),
                   subMaterials: subMaterials
                 });
