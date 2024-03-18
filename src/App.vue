@@ -1,4 +1,8 @@
+<script setup>
+import { SpeedInsights } from '@vercel/speed-insights/vue';
+</script>
 <template>
+  <SpeedInsights />
   <div class="contents">
     <div class="search-box">
       <Search @send-data="SearchItems" />
