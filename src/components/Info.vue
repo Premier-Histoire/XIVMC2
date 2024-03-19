@@ -170,7 +170,7 @@ export default {
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .toggle-left {
