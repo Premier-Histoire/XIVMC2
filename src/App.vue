@@ -166,12 +166,25 @@ export default {
       this.selectedInfo = item;
       this.$refs.infoComponent.someFunction(this.selectedInfo);
       if (item.isCraftable === false) {
-        console.log("check")
-        this.infoLoading = true;
-        console.log(this.infoLoading)
+        this.infoLoading = false;
+        this.normaldata(item);
         this.$refs.infoComponent.skip(2);
+        this.infoLoading = true;
       } else {
         this.getMaterialDetails(item);
+      }
+    },
+    async normaldata(item) {
+      try {
+        const salesHistory = await this.salesHistory(item.ItemId)
+        const currentHistory = await this.currentHistory(item.ItemId)
+        this.materialsJson = {
+          salesHistory,
+          currentHistory
+        };
+      } catch (error) {
+        console.error('salesHistory取得エラー:', error);
+        return null;
       }
     },
     async getLowestPrice(itemId) {
