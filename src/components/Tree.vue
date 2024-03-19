@@ -1,28 +1,38 @@
 <template>
-  <div>
+  <div class="tree">
     <ul>
-      <tree-item v-for="item in materialsJson" :key="item.itemId" :item="item" :price="price" />
+      <tree-item v-for="item in materialsJson.materials" :key="item.itemId" :item="item" />
     </ul>
-    <div class="info-bar border-top">
-      <div class="spaceflex"></div>
-      <div>1個当たりの単価: {{ Math.ceil(calculateTotalPrice(materialsJson) / materialsJson.amountResult).toLocaleString() }}ギル</div>
+    <div class="tree-item border-top">
+      <div class="tree-data"></div>
+      <div class="quantity"></div>
+      <div class="flex20">1個単価:</div>
+      <div class="flex20">{{ (materialsJson.totalPrice / materialsJson.amountResult).toLocaleString() }}ギル</div>
     </div>
-    <div class="info-bar">
-      <div class="spaceflex"></div>
-      <div>相場価格: {{ materialsJson.price.toLocaleString() }}ギル</div>
+    <div class="tree-item">
+      <div class="tree-data"></div>
+      <div class="quantity"></div>
+      <div class="flex20">相場価格:</div>
+      <div class="flex20">{{ (materialsJson.price).toLocaleString() }}ギル</div>
     </div>
-    <div class="info-bar">
-      <div class="spaceflex"></div>
-      <div>利益率: {{ (materialsJson.price/Math.ceil(calculateTotalPrice(materialsJson) / materialsJson.amountResult)*100).toFixed(2) }}%</div>
+    <div class="tree-item">
+      <div class="tree-data"></div>
+      <div class="quantity"></div>
+      <div class="flex20">利益率:</div>
+      <div class="flex20">{{ ((materialsJson.price)/(materialsJson.totalPrice / materialsJson.amountResult)*100).toFixed(2) }}%</div>
     </div>
-    <div class="space"></div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Tree',
-  props: ['materialsJson'],
+  props: {
+    materialsJson: {
+      type: Object,
+      required: true
+    }
+  },
   components: {
     TreeItem: {
       name: 'TreeItem',
@@ -41,8 +51,9 @@ export default {
               <p>{{ item.itemName }}</p> <!-- アイテム名を表示 -->
             </div>
             <div class="quantity">{{ item.quantity }}個</div>
-            <div :class="['price', { 'red-text': this.subprice }]" >{{ Math.ceil(price(item)).toLocaleString() }}ギル</div>
-            <div class="totalprice">{{ Math.ceil(item.quantity * price(item)).toLocaleString() }}ギル</div>
+            <div class="flex20" v-if="item.totalPrice === 0 || item.price < item.totalPrice">{{ item.price }} ギル</div>
+            <div class="flex20 red-text" v-else>{{ item.totalPrice }} ギル</div>
+            <div class="flex20">{{ Math.ceil(item.quantity * item.price).toLocaleString() }}ギル</div>
           </div>
           <ul v-if="expanded && item.subMaterials && item.subMaterials.length > 0">
             <tree-item v-for="subItem in item.subMaterials" :key="subItem.itemId" :item="subItem" :price="price" />
@@ -54,41 +65,6 @@ export default {
           this.expanded = !this.expanded; // 展開状態を反転させる
         },
       },
-    },
-  },
-  methods: {
-    isPriceLower(item) {
-      if (item.subMaterials && item.subMaterials.length > 0) {
-        const parentPrice = item.price;
-        let subMaterialsTotalPrice = 0;
-        for (const subItem of item.subMaterials) {
-          subMaterialsTotalPrice += subItem.price * subItem.quantity;
-        }
-        const totalPriceRatio = subMaterialsTotalPrice / item.amountResult;
-        return totalPriceRatio;
-      }
-      return false; // サブ素材がない場合は false を返す
-    },
-    price(item) {
-      if (item.isCraftable === false) {
-        return item.price;
-      } else if (item.price > this.isPriceLower(item)) {
-        this.subprice = true;
-        return this.isPriceLower(item);
-      } else {
-        this.subprice = true;
-        return item.price;
-      }
-    },
-    calculateTotalPrice(materials) {
-      let totalPrice = 0;
-      for (const item of materials) {
-        totalPrice += item.quantity * this.price(item);
-        if (item.subMaterials && item.subMaterials.length > 0) {
-          totalPrice += this.calculateTotalPrice(item.subMaterials);
-        }
-      }
-      return totalPrice;
     },
   },
 };
@@ -108,12 +84,17 @@ li ul {
 }
 
 .tree-item {
-  width: calc(100% - 40px);
+  width: 100%;
   display: flex;
   /* flexbox を使って子要素を横並びに配置 */
   align-items: center;
   /* 子要素を縦方向中央に配置 */
   margin-bottom: 10px;
+}
+
+.tree {
+  padding: 0px 20px 0px 20px;
+  font-size: 12px;
 }
 
 .tree-data {
@@ -122,7 +103,8 @@ li ul {
 }
 
 .tree-data p {
-  margin-bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .tree-data .icon {
@@ -136,13 +118,8 @@ li ul {
   text-align: right;
 }
 
-.price {
-  flex: 1.5;
-  text-align: right;
-}
-
-.totalprice {
-  flex: 1.5;
+.flex20 {
+  flex: 2;
   text-align: right;
 }
 
@@ -162,8 +139,13 @@ li ul {
 }
 
 .spaceflex {
-  flex: 2;
+  flex: 7;
   height: 24px;
+}
+
+.flex20 {
+  flex: 1.5;
+  text-align: right;
 }
 
 .space {

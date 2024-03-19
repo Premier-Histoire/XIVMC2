@@ -31,7 +31,7 @@
             </div>
 
             <div class="details">
-                <div v-if="activeButton === 1 && info.Name !== undefined" class="Tree-box">
+                <div v-if="activeButton === 1 && info.Name !== undefined" class="Tree-box scroll_bar">
                     <Tree :materialsJson="materialsJson" />
                 </div>
                 <div v-else-if="activeButton === 2 && info.Name !== undefined">
@@ -49,7 +49,7 @@ import Tree from './Tree.vue'
 export default {
     props: {
         materialsJson: {
-            type: Array,
+            type: Object,
             required: true
         },
         infoLoading: {
@@ -205,7 +205,7 @@ export default {
 .Tree-box {
     width: 100%;
     height: 100%;
-    margin: 20px;
+    margin: 20px 0 20px 0;
     box-sizing: border-box;
     overflow-y: scroll;
 }

@@ -143,7 +143,6 @@ export default {
           ...item,
           isCraftable: this.isCraftable(item.ItemId)
         }));
-        console.log(this.searchResults)
       } catch (error) {
         console.error('検索エラー:', error);
       }
@@ -178,6 +177,7 @@ export default {
         const recipe = this.recipeData.find(recipe => recipe.ItemResult === itemId);
         if (recipe) {
           const materials = [];
+          let totalPrice = 0; // 合計価格を計算するための変数を追加
           for (let i = 0; i <= 9; i++) {
             const ingredientItemId = recipe[`ItemIngredient[${i}]`];
             const ingredientQuantity = recipe[`AmountIngredient[${i}]`];
@@ -187,32 +187,41 @@ export default {
               const materialItem = this.itemsData.find(item => item.ItemId === ingredientItemId);
               if (materialItem) {
                 const subMaterialsData = await retrieveMaterials(ingredientItemId, ingredientQuantity);
+                const materialPrice = await this.getLowestPrice(ingredientItemId); // 素材の価格を取得
+                totalPrice += ingredientQuantity * materialPrice; // 合計価格に加算
                 materials.push({
                   itemId: ingredientItemId,
                   itemName: materialItem.Name,
                   Icon: materialItem.Icon,
-                  price: await this.getLowestPrice(ingredientItemId),
+                  price: materialPrice, // 素材の価格を保持
+                  totalPrice: subMaterialsData.totalPrice, // 合計価格を保持
                   quantity: ingredientQuantity,
                   isCraftable: this.isCraftable(ingredientItemId),
-                  subMaterials: subMaterialsData, // subMaterials を直接受け取る
+                  subMaterials: subMaterialsData.materials, // subMaterials を直接受け取る
                   amountResult: amountResult
                 });
               }
             }
           }
-          return materials;
+          return { materials, totalPrice }; // 素材と合計価格を返す
         } else {
-          return [];
+          return { materials: [], totalPrice: 0 }; // レシピが見つからない場合は空の素材リストと価格 0 を返す
         }
       };
-      this.materialsJson = await retrieveMaterials(item.ItemId, 1);
-      const amoutrecipe = this.recipeData.find(recipe => recipe.ItemResult === item.ItemId);
-      this.materialsJson.amountResult = amoutrecipe.AmountResult
-      this.materialsJson.price = await this.getLowestPrice(item.ItemId),
 
-      console.log(this.materialsJson);
+      const { materials, totalPrice } = await retrieveMaterials(item.ItemId, 1);
+      const amoutrecipe = this.recipeData.find(recipe => recipe.ItemResult === item.ItemId);
+      const amountResult = amoutrecipe ? amoutrecipe.AmountResult : 0;
+      const materialPrice = await this.getLowestPrice(item.ItemId);
+      this.materialsJson = {
+        materials,
+        totalPrice, // 合計価格を保持
+        price: materialPrice, // 素材の価格を保持
+        amountResult
+      };
       this.infoLoading = true;
     }
+
   }
 }
 </script>
