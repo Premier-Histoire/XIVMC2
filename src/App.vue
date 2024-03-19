@@ -14,9 +14,9 @@
         <div :class="{ 'result-text': true, 'freesearch-text': searchinfo.id === undefined }">{{ this.searchinfo.text }}
         </div>
       </div>
-      <div ref="scrollableElement" class="result-items scroll_bar">
+      <div class="result-items scroll_bar">
         <div class="result-margin">
-          <div class="result-itemlist scroll_bar">
+          <div ref="scrollableElement" class="result-itemlist scroll_bar">
             <div class="result-item" v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
               :class="{ 'last-item': index === searchResults.length - 1 }">
               <div class="item-icon">
