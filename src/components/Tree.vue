@@ -92,9 +92,13 @@ li ul {
   margin-bottom: 10px;
 }
 
+.padding-top {
+  padding-top: 5px
+}
+
 .tree {
   padding: 0px 20px 0px 20px;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .tree-data {
