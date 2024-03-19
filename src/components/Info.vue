@@ -31,7 +31,7 @@
             </div>
 
             <div class="details">
-                <div v-if="activeButton === 1 && info.Name !== undefined">
+                <div v-if="activeButton === 1 && info.Name !== undefined" class="Tree-box">
                     <Tree :materialsJson="materialsJson" />
                 </div>
                 <div v-else-if="activeButton === 2 && info.Name !== undefined">
@@ -199,5 +199,14 @@ export default {
     height: calc(100vh - 220px);
     background-color: rgb(70, 95, 95, 0.3);
     color: white;
+    list-style-type: none;
+    overflow: hidden;
+}
+
+.Tree-box {
+    width: 100%;
+    height: 100%;
+    margin: 20px;
+    box-sizing: border-box;
 }
 </style>

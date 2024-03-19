@@ -40,13 +40,32 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+li {
+  list-style-type: none;
+}
+
+ul {
+  padding-left: 0;
+}
+
+li ul {
+  padding-left: 3rem !important;
+}
+
 .tree-item {
   display: flex; /* flexbox を使って子要素を横並びに配置 */
   align-items: center; /* 子要素を縦方向中央に配置 */
+  margin-bottom: 10px;
 }
+
+.tree-item p{
+  margin-bottom: none;
+}
+
 .tree-item .icon {
   display: inline-block; /* アイコンを行内要素として表示 */
   margin-right: 10px; /* アイコンとアイテム名の間に余白を追加 */
+  vertical-align: middle; /* アイコンを縦方向に中央揃え */
 }
 </style>
