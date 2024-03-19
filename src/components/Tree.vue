@@ -1,8 +1,12 @@
 <template>
   <div>
     <ul>
-      <tree-item v-for="item in materialsJson" :key="item.itemId" :item="item" />
+      <tree-item v-for="item in materialsJson" :key="item.itemId" :item="item" :price="price" />
     </ul>
+    <div class="info-bar">
+      <div class="spaceflex"></div>
+      <div>1個当たりの単価: {{ Math.ceil(calculateTotalPrice(materialsJson) / materialsJson.amountResult) }}ギル</div>
+    </div>
   </div>
 </template>
 
@@ -13,30 +17,71 @@ export default {
   components: {
     TreeItem: {
       name: 'TreeItem',
-      props: ['item'],
+      props: ['item', 'price'],
       data() {
         return {
-          expanded: false // 各アイテムの展開状態を管理するデータ
+          expanded: false,
+          subprice: '',
         };
       },
       template: `
         <li>
           <div @click="toggle" class="tree-item">
-            <img v-if="item.Icon" :src="'/icons/normal/' + item.Icon + '.png'" class="icon" /> <!-- アイコンを表示 -->
-            <p>{{ item.itemName }}</p> <!-- アイテム名を表示 -->
+            <div class="tree-data">
+              <img v-if="item.Icon" :src="'/icons/normal/' + item.Icon + '.png'" class="icon" /> <!-- アイコンを表示 -->
+              <p>{{ item.itemName }}</p> <!-- アイテム名を表示 -->
+            </div>
+            <div class="quantity">{{ item.quantity }}個</div>
+            <div :class="['price', { 'red-text': this.subprice }]" >{{ Math.ceil(price(item)) }}ギル</div>
+            <div class="totalprice">{{ Math.ceil(item.quantity * price(item)) }}ギル</div>
           </div>
           <ul v-if="expanded && item.subMaterials && item.subMaterials.length > 0">
-            <tree-item v-for="subItem in item.subMaterials" :key="subItem.itemId" :item="subItem" />
+            <tree-item v-for="subItem in item.subMaterials" :key="subItem.itemId" :item="subItem" :price="price" />
           </ul>
         </li>
       `,
       methods: {
         toggle() {
           this.expanded = !this.expanded; // 展開状態を反転させる
+        },
+      },
+    },
+  },
+  methods: {
+    isPriceLower(item) {
+      if (item.subMaterials && item.subMaterials.length > 0) {
+        const parentPrice = item.price;
+        let subMaterialsTotalPrice = 0;
+        for (const subItem of item.subMaterials) {
+          subMaterialsTotalPrice += subItem.price * subItem.quantity;
+        }
+        const totalPriceRatio = subMaterialsTotalPrice / item.amountResult;
+        return totalPriceRatio;
+      }
+      return false; // サブ素材がない場合は false を返す
+    },
+    price(item) {
+      if (item.isCraftable === false) {
+        return item.price;
+      } else if (item.price > this.isPriceLower(item)) {
+        this.subprice = true;
+        return this.isPriceLower(item);
+      } else {
+        this.subprice = true;
+        return item.price;
+      }
+    },
+    calculateTotalPrice(materials) {
+      let totalPrice = 0;
+      for (const item of materials) {
+        totalPrice += item.quantity * this.price(item);
+        if (item.subMaterials && item.subMaterials.length > 0) {
+          totalPrice += this.calculateTotalPrice(item.subMaterials);
         }
       }
-    }
-  }
+      return totalPrice;
+    },
+  },
 };
 </script>
 
@@ -46,26 +91,65 @@ li {
 }
 
 ul {
-  padding-left: 0;
+  padding-left: 0px !important;
 }
 
 li ul {
-  padding-left: 3rem !important;
+  padding-left: 2rem !important;
 }
 
 .tree-item {
-  display: flex; /* flexbox を使って子要素を横並びに配置 */
-  align-items: center; /* 子要素を縦方向中央に配置 */
+  width: calc(100% - 40px);
+  display: flex;
+  /* flexbox を使って子要素を横並びに配置 */
+  align-items: center;
+  /* 子要素を縦方向中央に配置 */
   margin-bottom: 10px;
 }
 
-.tree-item p{
-  margin-bottom: none;
+.tree-data {
+  flex: 5;
+  display: flex;
 }
 
-.tree-item .icon {
-  display: inline-block; /* アイコンを行内要素として表示 */
-  margin-right: 10px; /* アイコンとアイテム名の間に余白を追加 */
-  vertical-align: middle; /* アイコンを縦方向に中央揃え */
+.tree-data p {
+  margin-bottom: 0;
+}
+
+.tree-data .icon {
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.quantity {
+  flex: 1;
+  text-align: right;
+}
+
+.price {
+  flex: 1.5;
+  text-align: right;
+}
+
+.totalprice {
+  flex: 1.5;
+  text-align: right;
+}
+
+.red-text {
+  color: red;
+}
+
+.info-bar {
+  width: calc(100% - 40px);
+  height: 24px;
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.spaceflex {
+  flex: 2;
+  height: 24px;
 }
 </style>

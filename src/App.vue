@@ -59,7 +59,8 @@ export default {
       searchQuery: '',
       searchinfo: [],
       imageSrc: '',
-      materialsJson: ''
+      materialsJson: [],
+      Result: ''
     }
   },
   components: {
@@ -181,17 +182,20 @@ export default {
             const ingredientItemId = recipe[`ItemIngredient[${i}]`];
             const ingredientQuantity = recipe[`AmountIngredient[${i}]`];
             if (ingredientItemId && ingredientQuantity > 0) {
+              const subrecipe = this.recipeData.find(recipe => recipe.ItemResult === ingredientItemId);
+              const amountResult = subrecipe ? subrecipe.AmountResult : 0; // AmountResult をサブレシピから取得
               const materialItem = this.itemsData.find(item => item.ItemId === ingredientItemId);
               if (materialItem) {
-                const subMaterials = await retrieveMaterials(ingredientItemId, ingredientQuantity);
+                const subMaterialsData = await retrieveMaterials(ingredientItemId, ingredientQuantity);
                 materials.push({
                   itemId: ingredientItemId,
                   itemName: materialItem.Name,
                   Icon: materialItem.Icon,
-                  quantity: ingredientQuantity,
                   price: await this.getLowestPrice(ingredientItemId),
+                  quantity: ingredientQuantity,
                   isCraftable: this.isCraftable(ingredientItemId),
-                  subMaterials: subMaterials
+                  subMaterials: subMaterialsData, // subMaterials を直接受け取る
+                  amountResult: amountResult
                 });
               }
             }
@@ -201,9 +205,11 @@ export default {
           return [];
         }
       };
-
       this.materialsJson = await retrieveMaterials(item.ItemId, 1);
-      console.log(this.materialsJson)
+      const amoutrecipe = this.recipeData.find(recipe => recipe.ItemResult === item.ItemId);
+      this.materialsJson.amountResult = amoutrecipe.AmountResult
+
+      console.log(this.materialsJson);
       this.infoLoading = true;
     }
   }

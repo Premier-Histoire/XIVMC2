@@ -197,7 +197,6 @@ export default {
 .details {
     width: calc(100% - 6px);
     height: calc(100vh - 220px);
-    background-color: rgb(70, 95, 95, 0.3);
     color: white;
     list-style-type: none;
     overflow: hidden;
@@ -208,5 +207,6 @@ export default {
     height: 100%;
     margin: 20px;
     box-sizing: border-box;
+    overflow-y: scroll;
 }
 </style>
