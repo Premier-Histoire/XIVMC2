@@ -14,7 +14,7 @@
         <div :class="{ 'result-text': true, 'freesearch-text': searchinfo.id === undefined }">{{ this.searchinfo.text }}
         </div>
       </div>
-      <div class="result-items scroll_bar">
+      <div ref="scrollableElement" class="result-items scroll_bar">
         <div class="result-margin">
           <div class="result-itemlist scroll_bar">
             <div class="result-item" v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
@@ -76,6 +76,9 @@ export default {
     this.loadJsonData();
   },
   methods: {
+    scrollToTop() {
+      this.$refs.scrollableElement.scrollTop = 0;
+    },
     async loadJsonData() {
       this.jsonLoading = false;
       try {
@@ -130,7 +133,7 @@ export default {
       this.searchinfo.text = text;
       this.getImagePath(data);
       let selectedJobId; // selectedJobId を定義する
-
+      this.scrollToTop();
       try {
         if (job !== undefined) {
           selectedJobId = this.findClassJobId(job); // selectedJobId を設定する
@@ -152,7 +155,6 @@ export default {
         console.error('検索エラー:', error);
       }
     },
-
     findClassJobId(selectedJob) {
       const matchingIds = [];
       for (const category of this.classJobCategories) {
