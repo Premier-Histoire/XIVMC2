@@ -254,14 +254,16 @@ export default {
       const { materials, totalPrice } = await retrieveMaterials(item.ItemId, 1);
       const amoutrecipe = this.recipeData.find(recipe => recipe.ItemResult === item.ItemId);
       const amountResult = amoutrecipe ? amoutrecipe.AmountResult : 0;
-      this.materialsJson.salesHistory = await this.salesHistory(item.ItemId)
-      this.materialsJson.currentHistory = await this.currentHistory(item.ItemId)
+      const salesHistory = await this.salesHistory(item.ItemId)
+      const currentHistory = await this.currentHistory(item.ItemId)
       const materialPrice = await this.getLowestPrice(item.ItemId);
       this.materialsJson = {
         materials,
         totalPrice, // 合計価格を保持
         price: materialPrice, // 素材の価格を保持
-        amountResult
+        amountResult,
+        salesHistory,
+        currentHistory
       };
       console.log(this.materialsJson)
       setTimeout(() => {

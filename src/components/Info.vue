@@ -38,8 +38,8 @@
                     <div v-if="activeButton === 1 && info.Name !== undefined" class="Tree-box scroll_bar">
                         <Tree :materialsJson="materialsJson" />
                     </div>
-                    <div v-else-if="activeButton === 2 && info.Name !== undefined">
-                        <p>ここに相場情報が表示されます。</p>
+                    <div v-else-if="activeButton === 2 && info.Name !== undefined" class="History-box">
+                        <History :materialsJson="materialsJson" />
                     </div>
                 </div>
             </div>
@@ -49,8 +49,9 @@
 
 <script>
 import { Tooltip } from 'bootstrap';
-import Tree from './Tree.vue'
-import Loading from './Loading.vue'
+import Tree from './Tree.vue';
+import Loading from './Loading.vue';
+import History from './History.vue';
 
 export default {
     props: {
@@ -64,7 +65,8 @@ export default {
     },
     components: {
         Tree,
-        Loading
+        Loading,
+        History
     },
     data() {
         return {
@@ -226,5 +228,11 @@ export default {
     margin: 20px 0 20px 0;
     box-sizing: border-box;
     overflow-y: scroll;
+}
+
+.History-box {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 }
 </style>
