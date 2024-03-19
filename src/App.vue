@@ -208,6 +208,7 @@ export default {
       this.materialsJson = await retrieveMaterials(item.ItemId, 1);
       const amoutrecipe = this.recipeData.find(recipe => recipe.ItemResult === item.ItemId);
       this.materialsJson.amountResult = amoutrecipe.AmountResult
+      this.materialsJson.price = await this.getLowestPrice(item.ItemId),
 
       console.log(this.materialsJson);
       this.infoLoading = true;

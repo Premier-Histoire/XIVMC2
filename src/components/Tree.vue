@@ -3,10 +3,19 @@
     <ul>
       <tree-item v-for="item in materialsJson" :key="item.itemId" :item="item" :price="price" />
     </ul>
+    <div class="info-bar border-top">
+      <div class="spaceflex"></div>
+      <div>1個当たりの単価: {{ Math.ceil(calculateTotalPrice(materialsJson) / materialsJson.amountResult).toLocaleString() }}ギル</div>
+    </div>
     <div class="info-bar">
       <div class="spaceflex"></div>
-      <div>1個当たりの単価: {{ Math.ceil(calculateTotalPrice(materialsJson) / materialsJson.amountResult) }}ギル</div>
+      <div>相場価格: {{ materialsJson.price.toLocaleString() }}ギル</div>
     </div>
+    <div class="info-bar">
+      <div class="spaceflex"></div>
+      <div>利益率: {{ (materialsJson.price/Math.ceil(calculateTotalPrice(materialsJson) / materialsJson.amountResult)*100).toFixed(2) }}%</div>
+    </div>
+    <div class="space"></div>
   </div>
 </template>
 
@@ -32,8 +41,8 @@ export default {
               <p>{{ item.itemName }}</p> <!-- アイテム名を表示 -->
             </div>
             <div class="quantity">{{ item.quantity }}個</div>
-            <div :class="['price', { 'red-text': this.subprice }]" >{{ Math.ceil(price(item)) }}ギル</div>
-            <div class="totalprice">{{ Math.ceil(item.quantity * price(item)) }}ギル</div>
+            <div :class="['price', { 'red-text': this.subprice }]" >{{ Math.ceil(price(item)).toLocaleString() }}ギル</div>
+            <div class="totalprice">{{ Math.ceil(item.quantity * price(item)).toLocaleString() }}ギル</div>
           </div>
           <ul v-if="expanded && item.subMaterials && item.subMaterials.length > 0">
             <tree-item v-for="subItem in item.subMaterials" :key="subItem.itemId" :item="subItem" :price="price" />
@@ -148,8 +157,17 @@ li ul {
   margin-bottom: 10px;
 }
 
+.border-top {
+  border-top: 1px solid white;
+}
+
 .spaceflex {
   flex: 2;
   height: 24px;
+}
+
+.space {
+  width: 100%;
+  height: 300px;
 }
 </style>
