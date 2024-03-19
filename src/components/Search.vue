@@ -505,7 +505,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
-                    <button type="button" class="btn btn-primary" @click="cacheSelection">保存</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="cacheSelection">保存</button>
                 </div>
             </div>
         </div>
@@ -514,7 +514,6 @@
 
 <script>
 import { Tooltip } from 'bootstrap'
-import { Modal } from 'bootstrap'
 
 export default {
     emits: ['send-data'],

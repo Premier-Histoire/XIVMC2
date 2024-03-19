@@ -1,38 +1,42 @@
 <template>
-    <div v-if="info" class="info">
-        <div class="detail-info">
-            <div class="info-img">
-                <img v-if="info.Name !== undefined" :src="`/icons/HR/${info.Icon}_hr1.png`" alt="アイコン" loading="lazy">
-            </div>
-            <div class="info-name" v-if="info.Name !== undefined">
-                {{ info.Name }}
-            </div>
-            <div class="info-clip" v-if="info.Name !== undefined" @click="copyToClipboard" data-bs-toggle="tooltip"
-                data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-offset="0, 10" title="アイテム名をコピーします。">
-                <i class="far fa-copy fa-lg"></i>
-            </div>
-        </div>
-        <div class="toggle">
-            <div class="material-info">
-                <div class="toggle-button toggle-left"
-                    :class="{ 'button-on': activeButton === 1, 'button-off': activeButton !== 1 }"
-                    @click="toggleButton(1)">素材情報
+    <div class="info">
+        <div v-if="infoLoading">
+            <div class="detail-info">
+                <div class="info-img">
+                    <img v-if="info.Name !== undefined" :src="`/icons/HR/${info.Icon}_hr1.png`" alt="アイコン"
+                        loading="lazy">
+                </div>
+                <div class="info-name" v-if="info.Name !== undefined">
+                    {{ info.Name }}
+                </div>
+                <div class="info-clip" v-if="info.Name !== undefined" @click="copyToClipboard" data-bs-toggle="tooltip"
+                    data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-offset="0, 10"
+                    title="アイテム名をコピーします。">
+                    <i class="far fa-copy fa-lg"></i>
                 </div>
             </div>
-            <div class="marketprice-info">
-                <div class="toggle-button toggle-right"
-                    :class="{ 'button-on': activeButton === 2, 'button-off': activeButton !== 2 }"
-                    @click="toggleButton(2)">相場情報
+            <div class="toggle">
+                <div class="material-info">
+                    <div class="toggle-button toggle-left"
+                        :class="{ 'button-on': activeButton === 1, 'button-off': activeButton !== 1 }"
+                        @click="toggleButton(1)">素材情報
+                    </div>
+                </div>
+                <div class="marketprice-info">
+                    <div class="toggle-button toggle-right"
+                        :class="{ 'button-on': activeButton === 2, 'button-off': activeButton !== 2 }"
+                        @click="toggleButton(2)">相場情報
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="details">
-            <div v-if="activeButton === 1 && info.Name !== undefined">
-                <p>ここに素材情報が表示されます。</p>
-            </div>
-            <div v-else-if="activeButton === 2 && info.Name !== undefined">
-                <p>ここに相場情報が表示されます。</p>
+            <div class="details">
+                <div v-if="activeButton === 1 && info.Name !== undefined">
+                    <Tree :materialsJson="materialsJson" />
+                </div>
+                <div v-else-if="activeButton === 2 && info.Name !== undefined">
+                    <p>ここに相場情報が表示されます。</p>
+                </div>
             </div>
         </div>
     </div>
@@ -40,13 +44,20 @@
 
 <script>
 import { Tooltip } from 'bootstrap';
+import Tree from './Tree.vue'
 
 export default {
     props: {
         materialsJson: {
-            type: String,
+            type: Array,
             required: true
+        },
+        infoLoading: {
+            type: Boolean
         }
+    },
+    components: {
+        Tree
     },
     data() {
         return {
@@ -97,6 +108,7 @@ export default {
 .info {
     display: flex;
     flex-direction: column;
+    height: calc(100% - 45px);
     border-left: 2px solid #555455;
 }
 

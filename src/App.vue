@@ -38,7 +38,7 @@
       <div class="info-header">
         <div class="info-text">詳細情報</div>
       </div>
-      <Info ref="infoComponent" :materialsJson="materialsJson" />
+      <Info ref="infoComponent" :materialsJson="materialsJson" :infoLoading="infoLoading" />
     </div>
   </div>
 </template>
@@ -163,15 +163,15 @@ export default {
       this.getMaterialDetails(item);
     },
     async getLowestPrice(itemId) {
-            const server = localStorage.getItem('searchvalue')
-            const response = await fetch(`https://universalis.app/api/${server}/${itemId}`);
-            const data = await response.json();
-            if (data.minPriceHQ === 0) {
-                return data.minPrice;
-            } else {
-                return data.minPriceHQ;
-            }
-        },
+      const server = localStorage.getItem('searchvalue')
+      const response = await fetch(`https://universalis.app/api/${server}/${itemId}`);
+      const data = await response.json();
+      if (data.minPriceHQ === 0) {
+        return data.minPrice;
+      } else {
+        return data.minPriceHQ;
+      }
+    },
     async getMaterialDetails(item) {
       const retrieveMaterials = async (itemId, quantity) => {
         const recipe = this.recipeData.find(recipe => recipe.ItemResult === itemId);
@@ -187,8 +187,9 @@ export default {
                 materials.push({
                   itemId: ingredientItemId,
                   itemName: materialItem.Name,
+                  Icon: materialItem.Icon,
                   quantity: ingredientQuantity,
-                  price:  await this.getLowestPrice(ingredientItemId),
+                  price: await this.getLowestPrice(ingredientItemId),
                   isCraftable: this.isCraftable(ingredientItemId),
                   subMaterials: subMaterials
                 });
@@ -201,9 +202,9 @@ export default {
         }
       };
 
-      const materials = await retrieveMaterials(item.ItemId, 1);
-      const materialsJson = JSON.stringify(materials);
-      console.log(materialsJson);
+      this.materialsJson = await retrieveMaterials(item.ItemId, 1);
+      console.log(this.materialsJson)
+      this.infoLoading = true;
     }
   }
 }
