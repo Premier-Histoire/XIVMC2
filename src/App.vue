@@ -97,9 +97,9 @@ export default {
         this.jsonLoading = true;
       }
     },
-    SearchItems(id, typeId, data, level, job) {
+    SearchItems(id, typeId, data, text, level, job) {
       if (id === 'Category') {
-        this.FilterSearch(typeId, data, level, job)
+        this.FilterSearch(typeId, data, text, level, job)
       } else {
         this.ItemSearch(data)
       }
@@ -137,13 +137,13 @@ export default {
       try {
         if (job !== undefined) {
           selectedJobId = this.findClassJobId(job); // selectedJobId を設定する
+          console.log(selectedJobId)
         }
         this.searchResults = this.itemsData.filter(item => {
           if (typeId === 1 || typeId === 2) {
             return parseInt(item.ItemSearchCategory) === data &&
-              ((parseInt(item.LevelEquip) <= level) ||
-                (parseInt(item.LevelEquip) <= level && selectedJobId.includes(String(item.ClassJobCategory)))
-              );
+              parseInt(item.LevelEquip) <= level &&
+              selectedJobId.includes(item.ClassJobCategory);
           } else {
             return parseInt(item.ItemSearchCategory) === data;
           }
