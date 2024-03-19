@@ -1,41 +1,46 @@
 <template>
     <div class="info">
-        <div v-if="infoLoading">
-            <div class="detail-info">
-                <div class="info-img">
-                    <img v-if="info.Name !== undefined" :src="`/icons/HR/${info.Icon}_hr1.png`" alt="アイコン"
-                        loading="lazy">
-                </div>
-                <div class="info-name" v-if="info.Name !== undefined">
-                    {{ info.Name }}
-                </div>
-                <div class="info-clip" v-if="info.Name !== undefined" @click="copyToClipboard" data-bs-toggle="tooltip"
-                    data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-offset="0, 10"
-                    title="アイテム名をコピーします。">
-                    <i class="far fa-copy fa-lg"></i>
-                </div>
-            </div>
-            <div class="toggle">
-                <div class="material-info">
-                    <div class="toggle-button toggle-left"
-                        :class="{ 'button-on': activeButton === 1, 'button-off': activeButton !== 1 }"
-                        @click="toggleButton(1)">素材情報
+        <div v-if="!infoLoading" class="loading">
+            <Loading />
+        </div>
+        <div v-else>
+            <div v-if="info.Name">
+                <div class="detail-info">
+                    <div class="info-img">
+                        <img v-if="info.Name !== undefined" :src="`/icons/HR/${info.Icon}_hr1.png`" alt="アイコン"
+                            loading="lazy">
+                    </div>
+                    <div class="info-name" v-if="info.Name !== undefined">
+                        {{ info.Name }}
+                    </div>
+                    <div class="info-clip" v-if="info.Name !== undefined" @click="copyToClipboard"
+                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                        data-offset="0, 10" title="アイテム名をコピーします。">
+                        <i class="far fa-copy fa-lg"></i>
                     </div>
                 </div>
-                <div class="marketprice-info">
-                    <div class="toggle-button toggle-right"
-                        :class="{ 'button-on': activeButton === 2, 'button-off': activeButton !== 2 }"
-                        @click="toggleButton(2)">相場情報
+                <div class="toggle">
+                    <div class="material-info">
+                        <div class="toggle-button toggle-left"
+                            :class="{ 'button-on': activeButton === 1, 'button-off': activeButton !== 1 }"
+                            @click="toggleButton(1)">素材情報
+                        </div>
+                    </div>
+                    <div class="marketprice-info">
+                        <div class="toggle-button toggle-right"
+                            :class="{ 'button-on': activeButton === 2, 'button-off': activeButton !== 2 }"
+                            @click="toggleButton(2)">相場情報
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="details">
-                <div v-if="activeButton === 1 && info.Name !== undefined" class="Tree-box scroll_bar">
-                    <Tree :materialsJson="materialsJson" />
-                </div>
-                <div v-else-if="activeButton === 2 && info.Name !== undefined">
-                    <p>ここに相場情報が表示されます。</p>
+                <div class="details">
+                    <div v-if="activeButton === 1 && info.Name !== undefined" class="Tree-box scroll_bar">
+                        <Tree :materialsJson="materialsJson" />
+                    </div>
+                    <div v-else-if="activeButton === 2 && info.Name !== undefined">
+                        <p>ここに相場情報が表示されます。</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,6 +50,7 @@
 <script>
 import { Tooltip } from 'bootstrap';
 import Tree from './Tree.vue'
+import Loading from './Loading.vue'
 
 export default {
     props: {
@@ -57,7 +63,8 @@ export default {
         }
     },
     components: {
-        Tree
+        Tree,
+        Loading
     },
     data() {
         return {
@@ -98,8 +105,8 @@ export default {
         someFunction(data) {
             this.info = data
         },
-        getmaterial() {
-
+        skip(num) {
+            this.activeButton = num;
         }
     }
 }
@@ -108,8 +115,19 @@ export default {
 .info {
     display: flex;
     flex-direction: column;
+    width: calc(100% - 6.5px);
     height: calc(100% - 45px);
     border-left: 2px solid #555455;
+}
+
+.loading {
+    background-color: #262626;
+    min-width: 100%;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
 }
 
 .detail-info {

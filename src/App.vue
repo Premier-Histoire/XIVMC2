@@ -1,5 +1,8 @@
 <template>
   <div class="contents">
+    <div v-if="!jsonLoading" class="loading-full">
+      <Loading />
+    </div>
     <div class="search-box">
       <Search @send-data="SearchItems" />
     </div>
@@ -46,12 +49,13 @@
 <script>
 import Search from './components/Search.vue'
 import Info from './components/Info.vue'
+import Loading from './components/Loading.vue'
 
 export default {
   data() {
     return {
-      isLoading: true,
-      infoLoading: false,
+      jsonLoading: false,
+      infoLoading: '',
       isSelectBoxOpen: false,
       selectedServer: '',
       selectedInfo: [],
@@ -64,6 +68,7 @@ export default {
     }
   },
   components: {
+    Loading,
     Search,
     Info
   },
@@ -72,8 +77,8 @@ export default {
   },
   methods: {
     async loadJsonData() {
+      this.jsonLoading = false;
       try {
-        this.isLoading = true;
         const itemsResponse = await fetch('/json/Item.json');
         const recipeResponse = await fetch('/json/Recipe.json');
         const classJobCategoriesResponse = await fetch('/json/ClassJobCategory.json');
@@ -86,7 +91,7 @@ export default {
       } catch (error) {
         console.error('JSON読み込みエラー:', error);
       } finally {
-        this.isLoading = false;
+        this.jsonLoading = true;
       }
     },
     SearchItems(id, typeId, data, level, job) {
@@ -160,7 +165,14 @@ export default {
     selectItem(item) {
       this.selectedInfo = item;
       this.$refs.infoComponent.someFunction(this.selectedInfo);
-      this.getMaterialDetails(item);
+      if (item.isCraftable === false) {
+        console.log("check")
+        this.infoLoading = true;
+        console.log(this.infoLoading)
+        this.$refs.infoComponent.skip(2);
+      } else {
+        this.getMaterialDetails(item);
+      }
     },
     async getLowestPrice(itemId) {
       const server = localStorage.getItem('searchvalue')
@@ -172,7 +184,37 @@ export default {
         return data.minPriceHQ;
       }
     },
+    async salesHistory(itemId) {
+      try {
+        const server = localStorage.getItem('searchvalue')
+        const response = await fetch(`https://universalis.app/api/v2/history/${server}/${itemId}`);
+        if (!response.ok) {
+          throw new Error('サーバーからの応答がありません');
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('salesHistory取得エラー:', error);
+        return null;
+      }
+    },
+    async currentHistory(itemId) {
+      try {
+        const server = localStorage.getItem('searchvalue')
+        const response = await fetch(`https://universalis.app/api/v2/${server}/${itemId}`);
+        if (!response.ok) {
+          throw new Error('サーバーからの応答がありません');
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error('currentHistory取得エラー:', error);
+        return null;
+      }
+    },
     async getMaterialDetails(item) {
+      this.infoLoading = false;
+      this.$refs.infoComponent.skip(1);
       const retrieveMaterials = async (itemId, quantity) => {
         const recipe = this.recipeData.find(recipe => recipe.ItemResult === itemId);
         if (recipe) {
@@ -212,6 +254,8 @@ export default {
       const { materials, totalPrice } = await retrieveMaterials(item.ItemId, 1);
       const amoutrecipe = this.recipeData.find(recipe => recipe.ItemResult === item.ItemId);
       const amountResult = amoutrecipe ? amoutrecipe.AmountResult : 0;
+      this.materialsJson.salesHistory = await this.salesHistory(item.ItemId)
+      this.materialsJson.currentHistory = await this.currentHistory(item.ItemId)
       const materialPrice = await this.getLowestPrice(item.ItemId);
       this.materialsJson = {
         materials,
@@ -219,7 +263,10 @@ export default {
         price: materialPrice, // 素材の価格を保持
         amountResult
       };
-      this.infoLoading = true;
+      console.log(this.materialsJson)
+      setTimeout(() => {
+        this.infoLoading = true;
+      }, 2000)
     }
 
   }
@@ -236,6 +283,20 @@ export default {
   border-image-width: 100px;
   border-image-outset: 0px;
   border-image-repeat: round;
+}
+
+.loading-full {
+  min-width: 100%;
+  min-height: 100%;
+  border-image-source: url(./assets/img/bordergate.png);
+  border-image-slice: 100 fill;
+  border-image-width: 100px;
+  border-image-outset: 0px;
+  border-image-repeat: round;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
 }
 
 .search-box {
