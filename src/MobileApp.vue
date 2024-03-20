@@ -404,7 +404,8 @@ body {
 #app {
     width: 100vw !important;
     height: 100vh !important;
-    background-color: #313131
+    background-color: #313131;
+    margin: 0;
 }
 
 @font-face {
