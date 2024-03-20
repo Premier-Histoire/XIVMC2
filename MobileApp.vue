@@ -27,7 +27,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> 
         </div>
         <div class="block block-3" :class="{ expanded: expandedBlock === 2 }">
             <p class="block-nav">詳細</p>
