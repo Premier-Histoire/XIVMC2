@@ -140,7 +140,10 @@ export default {
           console.log(selectedJobId)
         }
         this.searchResults = this.itemsData.filter(item => {
-          if (typeId === 1 || typeId === 2) {
+          if (typeId === 1) {
+            return parseInt(item.ItemSearchCategory) === data &&
+              parseInt(item.LevelEquip) <= level;
+          } else if (typeId === 2) {
             return parseInt(item.ItemSearchCategory) === data &&
               parseInt(item.LevelEquip) <= level &&
               selectedJobId.includes(item.ClassJobCategory);
