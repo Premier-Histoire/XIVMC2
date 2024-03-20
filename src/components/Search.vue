@@ -478,7 +478,8 @@
                     <form>
                         <div class="mb-3">
                             <label for="data-center-select" class="col-form-label">物理データセンター:</label>
-                            <select class="form-select" v-model="selectedPhysicalDataCenter">
+                            <select class="form-select" v-model="selectedPhysicalDataCenter"
+                                @change="clearLogicalAndServer">
                                 <option value="">空白</option>
                                 <option v-for="(physicalDataCenter, index) in physicalDataCenters"
                                     :value="physicalDataCenter" :key="index">{{ physicalDataCenter }}</option>
@@ -486,7 +487,7 @@
                         </div>
                         <div class="mb-3" v-if="selectedPhysicalDataCenter">
                             <label for="data-center-select" class="col-form-label">論理データセンター:</label>
-                            <select class="form-select" v-model="selectedLogicalDataCenter">
+                            <select class="form-select" v-model="selectedLogicalDataCenter" @change="clearServer">
                                 <option value="">空白</option>
                                 <option
                                     v-for="(logicalDataCenter, index) in logicalDataCenters[selectedPhysicalDataCenter]"
@@ -505,7 +506,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="cacheSelection">保存</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        @click="cacheSelection">保存</button>
                 </div>
             </div>
         </div>
@@ -556,6 +558,13 @@ export default {
     methods: {
         openModal() {
             this.myModal.show();
+        },
+        clearLogicalAndServer() {
+            this.selectedLogicalDataCenter = ''; // 論理データセンターをクリア
+            this.selectedServer = ''; // サーバーをクリア
+        },
+        clearServer() {
+            this.selectedServer = ''; // サーバーをクリア
         },
         incrementLevel(target) {
             // レベルを増やす
