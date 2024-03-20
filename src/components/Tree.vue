@@ -1,5 +1,5 @@
 <template>
-  <div class="tree">
+  <div class="tree scroll_bar">
     <ul class="tree-frame">
       <tree-item v-for="item in materialsJson.materials" :key="item.itemId" :item="item" />
     </ul>
@@ -19,9 +19,11 @@
       <div class="tree-data"></div>
       <div class="quantity"></div>
       <div class="flex20">利益率:</div>
-      <div class="flex20">{{ ((materialsJson.price)/(materialsJson.totalPrice / materialsJson.amountResult)*100).toFixed(2) }}%</div>
+      <div class="flex20">{{ ((materialsJson.price) / (materialsJson.totalPrice /
+        materialsJson.amountResult) * 100).toFixed(2) }}%</div>
     </div>
   </div>
+  <div class="bottom-space"></div>
 </template>
 
 <script>
@@ -46,6 +48,10 @@ export default {
       template: `
         <li>
           <div @click="toggle" class="tree-item">
+            <div v-if="item.subMaterials && item.subMaterials.length > 0" class="expand-mark">
+                <div class="expanded_minus" v-if="expanded"><img src="/icons/minus.png"></div>
+                <div class="expanded_plus" v-else><img src="/icons/plus.png"></div>
+            </div>
             <div class="tree-data">
               <img v-if="item.Icon" :src="'/icons/normal/' + item.Icon + '.png'" class="icon" /> <!-- アイコンを表示 -->
               <p>{{ item.itemName }}</p> <!-- アイテム名を表示 -->
@@ -54,6 +60,7 @@ export default {
             <div class="flex20" v-if="item.totalPrice === 0 || item.price < item.totalPrice">{{ item.price }} ギル</div>
             <div class="flex20 red-text" v-else>{{ item.totalPrice }} ギル</div>
             <div class="flex20">{{ Math.ceil(item.quantity * item.price).toLocaleString() }}ギル</div>
+            <!-- 展開がある場合の条件分岐 -->
           </div>
           <ul v-if="expanded && item.subMaterials && item.subMaterials.length > 0">
             <tree-item v-for="subItem in item.subMaterials" :key="subItem.itemId" :item="subItem" :price="price" />
@@ -147,51 +154,85 @@ export default {
 
 .tree-frame,
 .tree-frame ul {
-  margin:0 0 0 1em; /* indentation */
-  padding:0;
-  list-style:none;
+  margin: 0 0 0 1em;
+  /* indentation */
+  padding: 0;
+  list-style: none;
   color: white;
-  position:relative;
+  position: relative;
 }
 
-.tree-frame ul {margin-left:.5em} /* (indentation/2) */
+.tree-frame ul {
+  margin-left: .5em
+}
+
+/* (indentation/2) */
 
 .tree-frame:before,
 .tree-frame ul:before {
-  content:"";
-  display:block;
-  width:0;
-  position:absolute;
-  top:0;
-  bottom:0;
-  left:0;
-  border-left:1px solid;
+  content: "";
+  display: block;
+  width: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  border-left: 1px solid;
 }
 
 .tree-frame li {
-  margin:0;
-  padding:0 1em; /* indentation + .5em */
-  line-height:2em; /* default list item's `line-height` */
-  font-weight:bold;
-  position:relative;
+  margin: 0;
+  padding: 0 1em;
+  line-height: 2em;
+  font-weight: bold;
+  position: relative;
+  cursor: pointer;
 }
 
 .tree-frame li:before {
-  content:"";
-  display:block;
-  width:10px; /* same with indentation */
-  height:0;
-  border-top:1px solid;
-  margin-top:-1px; /* border top width */
-  position:absolute;
-  top:1em; /* (line-height/2) */
-  left:0;
+  content: "";
+  display: block;
+  width: 15px;
+  height: 0;
+  border-top: 1px solid;
+  margin-top: auto;
+  position: absolute;
+  top: 20px;
+  left: 0;
 }
 
 .tree-frame li:last-child:before {
-  background:#262626; /* same with body background */
-  height:auto;
-  top:1em; /* (line-height/2) */
-  bottom:0;
+  background: #262626;
+  height: auto;
+  top: 1em;
+  bottom: 0;
+}
+
+.bottom-space {
+  width: 100%;
+  height: 100px;
+}
+
+.expand-mark {
+  position: absolute;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: -23px;
+}
+
+.expanded_plus {
+  min-width: 16px;
+  min-height: 16px;
+  max-width: 16px;
+  max-height: 16px;
+  margin-bottom: 20px;
+}
+
+.expanded_minus {
+  min-width: 16px;
+  min-height: 16px;
+  max-width: 16px;
+  max-height: 16px;
+  margin-bottom: 20px;
 }
 </style>

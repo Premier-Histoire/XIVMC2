@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 
 <head>
   <meta charset="UTF-8">
@@ -27,5 +27,15 @@
 
   div#eorzeadb_tooltip {
     overflow: visible !important;
+  }
+
+  /* テキストのドラッグ操作の禁止 */
+  p {
+    user-select: none;
+  }
+
+  /* 画像もドラッグ操作禁止 */
+  img {
+    -webkit-user-drag: none;
   }
 </style>

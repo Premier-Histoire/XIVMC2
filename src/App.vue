@@ -74,6 +74,10 @@ export default {
   },
   created() {
     this.loadJsonData();
+    const searchValue = localStorage.getItem('searchvalue');
+    if (!searchValue) {
+      localStorage.setItem('searchvalue', 'Chocobo');
+    }
   },
   methods: {
     scrollToTop() {
