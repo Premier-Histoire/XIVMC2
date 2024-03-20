@@ -465,6 +465,10 @@
             </button>
         </div>
     </div>
+    <div class="copyright">
+        <p>FINAL FANTASY XIV</p>
+        <p> (C) SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -768,5 +772,20 @@ export default {
     border: 1px solid #222222;
     border-radius: 9999px;
     font-size: 12px;
+}
+
+.copyright {
+    position: absolute;
+    margin-bottom: 10px;
+    font-size: 10px;
+    width: inherit;
+    color: #FFF;
+    text-align: center;
+    bottom: 50px;
+}
+
+.copyright p {
+    margin-bottom: 0;
+    color: #fff;
 }
 </style>

@@ -154,7 +154,7 @@
 </template>
 
 <script>
-import Loding from './components/Loding.vue';
+import Loding from './components/Loading.vue';
 export default {
     components: {
         Loding,
