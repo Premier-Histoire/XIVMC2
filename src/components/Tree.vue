@@ -1,6 +1,6 @@
 <template>
   <div class="tree">
-    <ul>
+    <ul class="tree-frame">
       <tree-item v-for="item in materialsJson.materials" :key="item.itemId" :item="item" />
     </ul>
     <div class="tree-item border-top">
@@ -71,18 +71,6 @@ export default {
 </script>
 
 <style>
-li {
-  list-style-type: none;
-}
-
-ul {
-  padding-left: 0px !important;
-}
-
-li ul {
-  padding-left: 2rem !important;
-}
-
 .tree-item {
   width: 100%;
   display: flex;
@@ -155,5 +143,55 @@ li ul {
 .space {
   width: 100%;
   height: 300px;
+}
+
+.tree-frame,
+.tree-frame ul {
+  margin:0 0 0 1em; /* indentation */
+  padding:0;
+  list-style:none;
+  color: white;
+  position:relative;
+}
+
+.tree-frame ul {margin-left:.5em} /* (indentation/2) */
+
+.tree-frame:before,
+.tree-frame ul:before {
+  content:"";
+  display:block;
+  width:0;
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  border-left:1px solid;
+}
+
+.tree-frame li {
+  margin:0;
+  padding:0 1em; /* indentation + .5em */
+  line-height:2em; /* default list item's `line-height` */
+  font-weight:bold;
+  position:relative;
+}
+
+.tree-frame li:before {
+  content:"";
+  display:block;
+  width:10px; /* same with indentation */
+  height:0;
+  border-top:1px solid;
+  margin-top:-1px; /* border top width */
+  position:absolute;
+  top:1em; /* (line-height/2) */
+  left:0;
+}
+
+.tree-frame li:last-child:before {
+  background:#262626; /* same with body background */
+  height:auto;
+  top:1em; /* (line-height/2) */
+  bottom:0;
 }
 </style>
