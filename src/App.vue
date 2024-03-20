@@ -172,9 +172,10 @@ export default {
       this.$refs.infoComponent.someFunction(this.selectedInfo);
       if (item.isCraftable === false) {
         this.infoLoading = false;
-        this.normaldata(item);
-        this.$refs.infoComponent.skip(2);
-        this.infoLoading = true;
+        this.normaldata(item).then(() => {
+          this.$refs.infoComponent.skip(2);
+          this.infoLoading = true;
+        });
       } else {
         this.getMaterialDetails(item);
       }
