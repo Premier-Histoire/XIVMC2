@@ -238,8 +238,6 @@ export default {
     async getMaterialDetails(item) {
       this.infoLoading = false;
       this.$refs.infoComponent.skip(1);
-
-      // サブレシピを展開して素材情報を取得
       const retrieveMaterials = async (itemId, quantity) => {
         const recipe = this.recipeData.find(recipe => recipe.ItemResult === itemId);
         if (recipe) {
@@ -254,16 +252,14 @@ export default {
               const materialItem = this.itemsData.find(item => item.ItemId === ingredientItemId);
               if (materialItem) {
                 const subMaterialsData = await retrieveMaterials(ingredientItemId, ingredientQuantity);
-                // サブレシピの合計価格を修正
-                subMaterialsData.totalPrice = subMaterialsData.materials.reduce((sum, material) => sum + material.price * material.quantity, 0);
-                const materialPrice = await this.getLowestPrice(ingredientItemId);
-                totalPrice += ingredientQuantity * materialPrice;
+                const materialPrice = await this.getLowestPrice(ingredientItemId); // 素材の価格を取得
+                totalPrice += ingredientQuantity * materialPrice; // 合計価格に加算
                 materials.push({
                   itemId: ingredientItemId,
                   itemName: materialItem.Name,
                   Icon: materialItem.Icon,
                   price: materialPrice, // 素材の価格を保持
-                  totalPrice: subMaterialsData.totalPrice, // サブレシピの合計価格を保持
+                  totalPrice: subMaterialsData.totalPrice, // 合計価格を保持
                   quantity: ingredientQuantity,
                   isCraftable: this.isCraftable(ingredientItemId),
                   subMaterials: subMaterialsData.materials, // subMaterials を直接受け取る
@@ -278,41 +274,24 @@ export default {
         }
       };
 
-      // 素材情報の取得
       const { materials, totalPrice } = await retrieveMaterials(item.ItemId, 1);
-
-      // レシピ情報からAmountResultを取得
       const amoutrecipe = this.recipeData.find(recipe => recipe.ItemResult === item.ItemId);
       const amountResult = amoutrecipe ? amoutrecipe.AmountResult : 0;
-
-      // 販売履歴と現在の履歴を取得
-      const salesHistory = await this.salesHistory(item.ItemId);
-      const currentHistory = await this.currentHistory(item.ItemId);
-
-      // 素材情報の取得
-      const materialPricePromises = materials.map(material => this.getLowestPrice(material.itemId));
-      const materialPrices = await Promise.all(materialPricePromises);
-
-      // 素材情報に価格を追加
-      materials.forEach((material, index) => {
-        material.price = materialPrices[index];
-      });
-
-      // 合計価格を更新
+      const salesHistory = await this.salesHistory(item.ItemId)
+      const currentHistory = await this.currentHistory(item.ItemId)
+      const materialPrice = await this.getLowestPrice(item.ItemId);
       this.materialsJson = {
         materials,
-        totalPrice: materials.reduce((sum, material) => sum + material.price * material.quantity, 0), // 合計価格を更新
-        price: 0, // 仮の価格
+        totalPrice, // 合計価格を保持
+        price: materialPrice, // 素材の価格を保持
         amountResult,
         salesHistory,
         currentHistory
       };
-
-      console.log(this.materialsJson);
-
+      console.log(this.materialsJson)
       setTimeout(() => {
         this.infoLoading = true;
-      }, 2000);
+      }, 2000)
     }
 
   }
