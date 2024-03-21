@@ -93,7 +93,7 @@ export default {
 
 .tree {
   padding: 0px 20px 0px 20px;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .tree-data {
