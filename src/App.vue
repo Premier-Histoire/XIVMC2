@@ -20,7 +20,7 @@
         <div :class="{ 'result-text': true, 'freesearch-text': searchinfo.id === undefined }">{{ this.searchinfo.text }}
         </div>
       </div>
-      <div class="result-items scroll_bar">
+      <div :class="['result-items scroll_bar', { 'result-items-close': !isSearchBoxOpen }]" >
         <div class="result-margin">
           <div ref="scrollableElement" class="result-itemlist scroll_bar">
             <div class="result-item" v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
@@ -364,6 +364,7 @@ export default {
 .close {
   width: 0;
   overflow: hidden;
+  border: none;
   transition: width 0.3s ease;
 }
 
@@ -378,10 +379,6 @@ export default {
 .toggle-search-box {
   margin-left: 15px;
   color: white;
-}
-
-.search-border {
-  border-right: 2px solid #555455;
 }
 
 .modal-body {
@@ -434,6 +431,11 @@ export default {
   height: calc(100% - 31px);
   margin-bottom: 8px;
   border-left: 2px solid #555455;
+}
+
+.result-items-close {
+  padding-left: 10px;
+  border-left: none;
 }
 
 .result-itemlist {
