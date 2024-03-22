@@ -298,6 +298,8 @@ export default {
 
           materials.forEach(material => {
             material.subTotalPrice = Math.round(calculateSubMaterialsPrice(material.subMaterials) / material.amountResult);
+            // NaNを0に修正
+            material.subTotalPrice = isNaN(material.subTotalPrice) ? 0 : material.subTotalPrice;
             const materialPrice = Math.min(material.price, material.lowestPrice);
             totalPrice += materialPrice * material.quantity;
           });
