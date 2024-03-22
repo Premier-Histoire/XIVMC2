@@ -1,4 +1,5 @@
 <template>
+  <SpeedInsights/>
   <div class="contents">
     <div v-if="!jsonLoading" class="loading-full">
       <Loading />
@@ -56,6 +57,7 @@
 import Search from './components/Search.vue'
 import Info from './components/Info.vue'
 import Loading from './components/Loading.vue'
+import { SpeedInsights } from "@vercel/speed-insights/vue"
 
 export default {
   data() {
@@ -71,13 +73,14 @@ export default {
       imageSrc: '',
       materialsJson: [],
       Result: '',
-      isSearchBoxOpen: false,
+      isSearchBoxOpen: true,
     }
   },
   components: {
     Loading,
     Search,
-    Info
+    Info,
+    SpeedInsights
   },
   created() {
     this.loadJsonData();
