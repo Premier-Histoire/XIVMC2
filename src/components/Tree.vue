@@ -57,10 +57,21 @@ export default {
               <p>{{ item.itemName }}</p> <!-- アイテム名を表示 -->
             </div>
             <div class="quantity">{{ item.quantity }}個</div>
-            <div class="flex20" v-if="item.totalPrice === 0 || item.price < item.totalPrice">{{ item.price }} ギル</div>
-            <div class="flex20 red-text" v-else>{{ item.totalPrice }} ギル</div>
-            <div class="flex20">{{ Math.ceil(item.quantity * item.price).toLocaleString() }}ギル</div>
-            <!-- 展開がある場合の条件分岐 -->
+            <div class="flex20" :class="{ 'red-text': !isNaN(item.subTotalPrice) && item.price >= item.subTotalPrice }">
+              {{
+                isNaN(item.subTotalPrice) || item.price < item.subTotalPrice
+                  ? item.price.toLocaleString()
+                  : item.subTotalPrice.toLocaleString()
+              }} ギル
+            </div>
+            <div class="flex20" :class="{ 'red-text': !isNaN(item.subTotalPrice) && item.price >= item.subTotalPrice }">
+              {{
+                isNaN(item.subTotalPrice) || item.price < item.subTotalPrice
+                  ? Math.ceil( item.price * item.quantity).toLocaleString()
+                  : Math.ceil( item.subTotalPrice * item.quantity).toLocaleString()
+              }} ギル
+            </div>
+          <!-- 展開がある場合の条件分岐 -->
           </div>
           <ul v-if="expanded && item.subMaterials && item.subMaterials.length > 0">
             <tree-item v-for="subItem in item.subMaterials" :key="subItem.itemId" :item="subItem" :price="price" />
