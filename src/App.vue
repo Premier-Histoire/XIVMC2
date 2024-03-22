@@ -262,7 +262,7 @@ export default {
               const materialItem = this.itemsData.find(item => item.ItemId === ingredientItemId);
               if (materialItem) {
                 const subMaterialsData = await retrieveMaterials(ingredientItemId);
-                const lowestPrice = await this.getLowestPrice(ingredientItemId); // 最安値を取得
+                //const lowestPrice = await this.getLowestPrice(ingredientItemId); // 最安値を取得
                 promises.push(this.getLowestPrice(ingredientItemId)); // 各素材の最安値取得用のPromiseを追加
                 materials.push({
                   itemId: ingredientItemId,
