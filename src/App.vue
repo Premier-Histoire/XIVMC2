@@ -208,7 +208,7 @@ export default {
     },
     async getLowestPrice(itemId) {
       const server = localStorage.getItem('searchvalue')
-      const response = await fetch(`https://universalis.app/api/${server}/${itemId}`);
+      const response = await fetch(`https://universalis.app/api/${server}/${itemId}?fields=minPrice%2CminPriceHQ`);
       const data = await response.json();
       if (data.minPriceHQ === 0) {
         return data.minPrice;
@@ -219,7 +219,7 @@ export default {
     async salesHistory(itemId) {
       try {
         const server = localStorage.getItem('searchvalue')
-        const response = await fetch(`https://universalis.app/api/v2/history/${server}/${itemId}`);
+        const response = await fetch(`https://universalis.app/api/v2/history/${server}/${itemId}?entriesToReturn=100`);
         if (!response.ok) {
           throw new Error('サーバーからの応答がありません');
         }
