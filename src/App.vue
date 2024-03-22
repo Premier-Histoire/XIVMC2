@@ -3,11 +3,17 @@
     <div v-if="!jsonLoading" class="loading-full">
       <Loading />
     </div>
-    <div class="search-box">
-      <Search @send-data="SearchItems" />
+    <div :class="['sidebar', { 'close': !isSearchBoxOpen }]">
+      <div class="search-box">
+        <Search @send-data="SearchItems" />
+      </div>
     </div>
     <div class="result-box">
-      <div class="result-header">
+      <div :class="['result-header', { 'result-header-close': !isSearchBoxOpen }]" @click="toggleSearchBox">
+        <div class="toggle-search-box">
+          <span v-if="this.isSearchBoxOpen"><i class="fas fa-chevron-left" /></span>
+          <span v-else><i class="fas fa-chevron-right" /></span>
+        </div>
         <div class="result-img">
           <img v-if="searchinfo.id !== undefined" :src="imageSrc">
         </div>
@@ -64,7 +70,8 @@ export default {
       searchinfo: [],
       imageSrc: '',
       materialsJson: [],
-      Result: ''
+      Result: '',
+      isSearchBoxOpen: false,
     }
   },
   components: {
@@ -82,6 +89,9 @@ export default {
   methods: {
     scrollToTop() {
       this.$refs.scrollableElement.scrollTop = 0;
+    },
+    toggleSearchBox() {
+      this.isSearchBoxOpen = !this.isSearchBoxOpen;
     },
     async loadJsonData() {
       this.jsonLoading = false;
@@ -324,10 +334,28 @@ export default {
   z-index: 10;
 }
 
-.search-box {
+.sidebar {
   width: 300px;
+  transition: width 0.3s ease;
+}
+
+.close {
+  width: 0;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.search-box {
+  position: relative;
+  width: 100%;
+  height: 100%;
   padding: 5px 0 10px 12.5px;
   margin-right: 12.5px;
+}
+
+.toggle-search-box {
+  margin-left: 15px;
+  color: white;
 }
 
 .search-border {
@@ -357,6 +385,10 @@ export default {
   margin-top: 5px;
   background: repeat url("./assets/img/header.png");
   display: flex;
+}
+
+.result-header-close {
+  margin-left: 13px;
 }
 
 .result-img img {

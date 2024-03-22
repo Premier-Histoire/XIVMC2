@@ -639,24 +639,26 @@ export default {
 .title {
     position: relative;
     width: 100%;
-    height: 40px;
+    height: 30px;
     display: flex;
     justify-content: center;
+    margin-bottom: 10px;
 }
 
 .setting {
     position: absolute;
     color: white;
     top: 50%;
-    right: 5px;
+    right: 15px;
     transform: translateY(-50%);
 }
 
 .title img {
-    height: 40px;
+    height: 30px;
 }
 
 .subtext {
+    width: 265px;
     color: white;
     font-size: 15px;
     font-weight: bold;
@@ -670,7 +672,7 @@ export default {
 
 .search-input {
     flex-grow: 1;
-    width: 100%;
+    width: 260px;
     border-radius: 5px;
     height: 25px;
     font-size: 13px;
@@ -680,7 +682,7 @@ export default {
 }
 
 .category-button {
-    width: 100%;
+    width: 275px;
     padding: 3px 10px 3px 10px;
 }
 
@@ -717,6 +719,7 @@ export default {
 .level-selector-container {
     display: flex;
     justify-content: center;
+    margin-left: 27px;
 }
 
 .level-selector {
@@ -776,12 +779,11 @@ export default {
 
 .copyright {
     position: absolute;
-    margin-bottom: 10px;
+    width: 275px;
+    bottom: 20px;
     font-size: 10px;
-    width: inherit;
     color: #FFF;
     text-align: center;
-    bottom: 50px;
 }
 
 .copyright p {
