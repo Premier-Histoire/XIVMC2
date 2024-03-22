@@ -251,40 +251,38 @@ export default {
         const recipe = this.recipeData.find(recipe => recipe.ItemResult === itemId);
         if (recipe) {
           const materials = [];
-          let totalPrice = 0;
-          const promises = []; // プロミスを格納する配列
-
+          let totalPrice = 0; // 合計価格を計算するための変数を追加
+          const promises = []; // 各素材の最安値取得用のPromise配列を定義
           for (let i = 0; i <= 9; i++) {
             const ingredientItemId = recipe[`ItemIngredient[${i}]`];
             const ingredientQuantity = recipe[`AmountIngredient[${i}]`];
             if (ingredientItemId && ingredientQuantity > 0) {
               const subrecipe = this.recipeData.find(recipe => recipe.ItemResult === ingredientItemId);
-              const amountResult = subrecipe ? subrecipe.AmountResult : 0;
+              const amountResult = subrecipe ? subrecipe.AmountResult : 0; // AmountResult をサブレシピから取得
               const materialItem = this.itemsData.find(item => item.ItemId === ingredientItemId);
               if (materialItem) {
                 const subMaterialsData = await retrieveMaterials(ingredientItemId);
-                const lowestPricePromise = this.getLowestPrice(ingredientItemId); // プロミスを取得
-                promises.push(lowestPricePromise); // プロミスを配列に追加
+                promises.push(this.getLowestPrice(ingredientItemId)); // 各素材の最安値取得用のPromiseを追加
                 materials.push({
                   itemId: ingredientItemId,
                   itemName: materialItem.Name,
                   Icon: materialItem.Icon,
                   quantity: ingredientQuantity,
                   isCraftable: this.isCraftable(ingredientItemId),
-                  subMaterials: subMaterialsData.materials,
-                  amountResult: amountResult,
-                  lowestPricePromise: lowestPricePromise // プロミスを素材データに格納
+                  subMaterials: subMaterialsData.materials, // subMaterials を直接受け取る
+                  amountResult: amountResult
                 });
               }
             }
           }
-
-          const lowestPrices = await Promise.all(promises); // 全ての最安値取得API呼び出しを待つ
-
+          // 並列処理で全ての最安値取得API呼び出しを待つ
+          const lowestPrices = await Promise.all(promises);
+          // 各素材に最安値を追加
           materials.forEach((material, index) => {
-            material.lowestPrice = lowestPrices[index]; // プロミスから取得した最安値を素材データに格納
+            material.lowestPrice = lowestPrices[index];
           });
 
+          // subMaterials内の合計価格を計算
           const calculateSubMaterialsPrice = (subMaterials) => {
             let totalSubMaterialsPrice = 0;
             subMaterials.forEach(subMaterial => {
@@ -296,17 +294,18 @@ export default {
             return totalSubMaterialsPrice;
           };
 
+          // materials内の各素材のsubMaterials内の合計価格を計算
           materials.forEach(material => {
             material.subTotalPrice = Math.round(calculateSubMaterialsPrice(material.subMaterials) / material.amountResult);
             // NaNを0に修正
             material.subTotalPrice = isNaN(material.subTotalPrice) ? 0 : material.subTotalPrice;
-            const materialPrice = Math.min(material.price, material.lowestPrice);
+            const materialPrice = Math.min(material.lowestPrice); // 最安値のみ使用する
             totalPrice += materialPrice * material.quantity;
           });
 
-          return { materials, totalPrice };
+          return { materials, totalPrice }; // 素材と合計価格を返す
         }
-        return { materials: [], totalPrice: 0 };
+        return { materials: [], totalPrice: 0 }; // recipe が見つからなかった場合に空の素材配列と totalPrice 0 を返す
       }
       const { materials, totalPrice } = await retrieveMaterials(item.ItemId);
       const amoutrecipe = this.recipeData.find(recipe => recipe.ItemResult === item.ItemId);
@@ -318,8 +317,8 @@ export default {
       ]);
       this.materialsJson = {
         materials,
-        totalPrice,
-        price: materialPrice,
+        totalPrice, // 合計価格を保持
+        price: materialPrice, // 素材の価格を保持
         amountResult,
         salesHistory,
         currentHistory

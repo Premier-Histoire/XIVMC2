@@ -57,18 +57,18 @@ export default {
               <p>{{ item.itemName }}</p> <!-- アイテム名を表示 -->
             </div>
             <div class="quantity">{{ item.quantity }}個</div>
-            <div class="flex20" :class="{ 'red-text': !isNaN(item.subTotalPrice) && item.price >= item.subTotalPrice }">
+            <div class="flex20" :class="{ 'red-text': item.lowestPrice > item.subTotalPrice && item.subTotalPrice !== 0 }">
               {{
-                isNaN(item.subTotalPrice) || item.price < item.subTotalPrice
-                  ? item.price.toLocaleString()
-                  : item.subTotalPrice.toLocaleString()
+                (item.lowestPrice > item.subTotalPrice && item.subTotalPrice !== 0)
+                  ? item.subTotalPrice
+                  : item.lowestPrice
               }} ギル
             </div>
-            <div class="flex20" :class="{ 'red-text': !isNaN(item.subTotalPrice) && item.price >= item.subTotalPrice }">
+            <div class="flex20" :class="{ 'red-text': item.lowestPrice > item.subTotalPrice && item.subTotalPrice !== 0 }">
               {{
-                isNaN(item.subTotalPrice) || item.price < item.subTotalPrice
-                  ? Math.ceil( item.price * item.quantity).toLocaleString()
-                  : Math.ceil( item.subTotalPrice * item.quantity).toLocaleString()
+                (item.lowestPrice > item.subTotalPrice && item.subTotalPrice !== 0)
+                  ? Math.ceil(item.subTotalPrice * item.quantity)
+                  : Math.ceil(item.lowestPrice * item.quantity)
               }} ギル
             </div>
           <!-- 展開がある場合の条件分岐 -->
