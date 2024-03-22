@@ -381,7 +381,7 @@ export default {
 
 .result-header {
   width: 100%;
-  height: 31px;
+  height: 30px;
   margin-top: 5px;
   background: repeat url("./assets/img/header.png");
   display: flex;
@@ -471,7 +471,7 @@ export default {
 
 .info-header {
   width: calc(100% - 6.5px);
-  height: 31px;
+  height: 30px;
   margin-top: 5px;
   background: repeat url("./assets/img/header.png");
   display: flex;
