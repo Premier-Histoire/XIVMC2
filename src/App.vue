@@ -327,9 +327,7 @@ export default {
         currentHistory
       };
       console.log(this.materialsJson);
-      setTimeout(() => {
-        this.infoLoading = true;
-      }, 2000)
+      this.infoLoading = true;
     }
   }
 }
