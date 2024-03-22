@@ -60,15 +60,15 @@ export default {
             <div class="flex20" :class="{ 'red-text': item.lowestPrice > item.subTotalPrice && item.subTotalPrice !== 0 }">
               {{
                 (item.lowestPrice > item.subTotalPrice && item.subTotalPrice !== 0)
-                  ? item.subTotalPrice
-                  : item.lowestPrice
+                  ? item.subTotalPrice.toLocaleString()
+                  : item.lowestPrice.toLocaleString()
               }} ギル
             </div>
             <div class="flex20" :class="{ 'red-text': item.lowestPrice > item.subTotalPrice && item.subTotalPrice !== 0 }">
               {{
                 (item.lowestPrice > item.subTotalPrice && item.subTotalPrice !== 0)
-                  ? Math.ceil(item.subTotalPrice * item.quantity)
-                  : Math.ceil(item.lowestPrice * item.quantity)
+                  ? Math.ceil(item.subTotalPrice * item.quantity).toLocaleString()
+                  : Math.ceil(item.lowestPrice * item.quantity).toLocaleString()
               }} ギル
             </div>
           <!-- 展開がある場合の条件分岐 -->
