@@ -86,7 +86,7 @@ export default {
                 navigator.clipboard.writeText(itemName)
                     .then(() => {
                         console.log('テキストがクリップボードにコピーされました: ', itemName);
-                        alert('テキストがクリップボードにコピーされました');
+                        alert(`${itemName} がクリップボードにコピーされました`);
                     })
                     .catch(err => {
                         console.error('クリップボードへのアクセスが拒否されました: ', err);

@@ -22,6 +22,22 @@
       <div class="flex20">{{ ((materialsJson.price) / (materialsJson.totalPrice /
         materialsJson.amountResult) * 100).toFixed(2) }}%</div>
     </div>
+    <div class="tree-item">
+      <div class="tree-data"></div>
+      <div class="quantity"></div>
+      <div class="flex20">週平均売上数:</div>
+      <div class="flex20">{{ materialsJson.salesHistory.regularSaleVelocity.toFixed(2) }}個</div>
+    </div>
+    <div class="tree-item">
+      <div class="tree-data"></div>
+      <div class="quantity"></div>
+      <div class="flex20">1日の販売額:</div>
+      <div class="flex20">{{ (materialsJson.salesHistory.regularSaleVelocity *
+        materialsJson.price).toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+        }) }}ギル</div>
+    </div>
   </div>
   <div class="bottom-space"></div>
 </template>
@@ -55,6 +71,10 @@ export default {
             <div class="tree-data">
               <img v-if="item.Icon" :src="'/icons/normal/' + item.Icon + '.png'" class="icon" /> <!-- アイコンを表示 -->
               <p>{{ item.itemName }}</p> <!-- アイテム名を表示 -->
+              <div @click.stop="copyTextToClipboard(item.itemName)" class="padding-10" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                        data-offset="0, 10" title="アイテム名をコピーします。">
+                <i class="far fa-copy fa-lg"></i>
+              </div>
             </div>
             <div class="quantity">{{ item.quantity }}個</div>
             <div class="flex20" :class="{ 'red-text': item.lowestPrice > item.subTotalPrice && item.subTotalPrice !== 0 }">
@@ -82,6 +102,27 @@ export default {
         toggle() {
           this.expanded = !this.expanded; // 展開状態を反転させる
         },
+        copyTextToClipboard(itemName) {
+          // コピーする処理を記述する
+          // 例えば、先ほど提供したJavaScriptの関数をそのまま使うことができます
+          this.copyToClipboard(itemName);
+        },
+        copyToClipboard(itemName) {
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(itemName)
+              .then(() => {
+                console.log('テキストがクリップボードにコピーされました: ', itemName);
+                alert(`${itemName} がクリップボードにコピーされました`);
+              })
+              .catch(err => {
+                console.error('クリップボードへのアクセスが拒否されました: ', err);
+                alert('クリップボードへのアクセスが拒否されました');
+              });
+          } else {
+            console.error('クリップボードAPIがサポートされていません');
+            alert('クリップボードAPIがサポートされていません');
+          }
+        },
       },
     },
   },
@@ -104,7 +145,7 @@ export default {
 
 .tree {
   padding: 0px 20px 0px 20px;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .tree-data {
@@ -112,9 +153,14 @@ export default {
   display: flex;
 }
 
-.tree-data p {
+.tree-data p,
+.tree-data div {
   margin-top: auto;
   margin-bottom: auto;
+}
+
+.padding-10 {
+  padding-left: 10px;
 }
 
 .tree-data .icon {
@@ -129,7 +175,7 @@ export default {
 }
 
 .flex20 {
-  flex: 2;
+  flex: 1.5;
   text-align: right;
 }
 
@@ -151,11 +197,6 @@ export default {
 .spaceflex {
   flex: 7;
   height: 24px;
-}
-
-.flex20 {
-  flex: 1.5;
-  text-align: right;
 }
 
 .space {
