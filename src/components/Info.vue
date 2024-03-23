@@ -226,7 +226,7 @@ export default {
 
 .details {
     width: calc(100% - 6px);
-    height: calc(100vh - 220px);
+    height: calc(100vh - 240px);
     color: white;
     list-style-type: none;
     overflow: hidden;

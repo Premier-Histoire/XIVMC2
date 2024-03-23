@@ -30,7 +30,7 @@
         </div>
         <div v-if="materialsJson.currentHistory" class="history-section">
             <h5>現在の市場価格</h5>
-            <div class="history-table scroll_bar">
+            <div class="history-table  scroll_bar">
                 <table>
                     <thead>
                         <tr>
@@ -82,10 +82,12 @@ export default {
     /* 各セクションを横幅の50%に設定 */
     color: #fff;
     margin-bottom: 10px;
+    height: 100%;
 }
 
 .history-table {
     overflow-y: scroll;
+    height: 100%;
 }
 
 table {

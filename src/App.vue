@@ -130,6 +130,7 @@ export default {
       this.selectedInfo = [],
         this.searchinfo.id = undefined;
       this.searchinfo.text = '検索';
+      this.scrollToTop();
       try {
         this.searchResults = this.itemsData.filter(item =>
           item.Name.includes(searchQuery)
