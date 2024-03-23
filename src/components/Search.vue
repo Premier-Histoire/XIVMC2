@@ -765,6 +765,7 @@ export default {
 .select-job {
     display: flex;
     justify-content: center;
+    cursor: pointer;
 }
 
 .select-box {
