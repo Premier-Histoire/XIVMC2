@@ -35,8 +35,19 @@
       <div class="flex20">{{ (materialsJson.salesHistory.regularSaleVelocity *
         materialsJson.price).toLocaleString(undefined, {
           minimumFractionDigits: 0,
-        maximumFractionDigits: 0
+          maximumFractionDigits: 0
         }) }}ギル</div>
+    </div>
+    <div class="tree-item">
+      <div class="tree-data"></div>
+      <div class="quantity"></div>
+      <div class="flex20">1日の利益額:</div>
+      <div class="flex20">{{ ((materialsJson.salesHistory.regularSaleVelocity * materialsJson.price) -
+        (materialsJson.salesHistory.regularSaleVelocity * (materialsJson.totalPrice / materialsJson.amountResult))).toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }) }}ギル
+      </div>
     </div>
   </div>
   <div class="bottom-space"></div>
@@ -131,11 +142,10 @@ export default {
 
 <style>
 .tree-item {
+  height: 40px;
   width: 100%;
   display: flex;
-  /* flexbox を使って子要素を横並びに配置 */
   align-items: center;
-  /* 子要素を縦方向中央に配置 */
   margin-bottom: 10px;
 }
 
@@ -267,9 +277,9 @@ export default {
 
 .expand-mark {
   position: absolute;
-  margin-top: auto;
+  margin-top: 3px;
   margin-bottom: auto;
-  margin-left: -23px;
+  margin-left: -21px;
 }
 
 .expanded_plus {
