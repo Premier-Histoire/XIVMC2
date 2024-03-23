@@ -29,7 +29,7 @@
                 <img :src="`/icons/normal/${item.Icon}.png`" alt="Icon">
               </div>
               <div class="result-name">{{ item.Name }}</div>
-              <div class="loadstone">
+              <div class="loadstone" @click.stop="">
                 <a :href="'https://jp.finalfantasyxiv.com/lodestone/playguide/db/item/' + item.loadstoneid"
                   class="eorzeadb_link" target="_blank">
                   <img src="./assets/img/lodestone.png">
