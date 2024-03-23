@@ -1,7 +1,7 @@
 <template>
     <div class="title">
         <img src="../assets/img/title.png">
-        <div class="setting" data-bs-toggle="modal" >
+        <div class="setting" data-bs-toggle="modal" data-bs-target="#exampleModal">
             <i class="fas fa-cog fa-lg"></i>
         </div>
     </div>
