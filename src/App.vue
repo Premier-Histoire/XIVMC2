@@ -190,7 +190,11 @@ export default {
           this.infoLoading = true;
         });
       } else {
-        this.getMaterialDetails(item);
+        if(this.infoLoading === false){
+          alert("別の詳細検索がすでに実行中です。");
+        } else {
+          this.getMaterialDetails(item);
+        }
       }
     },
     async normaldata(item) {
