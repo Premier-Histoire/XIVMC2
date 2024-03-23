@@ -1,8 +1,7 @@
 <template>
     <div class="title">
         <img src="../assets/img/title.png">
-        <div class="setting" data-bs-toggle="modal tooltip" data-bs-target="#exampleModal" data-bs-placement="top"
-            data-bs-custom-class="custom-tooltip" data-offset="0, 10" title="サーバー設定">
+        <div class="setting" data-bs-toggle="modal" >
             <i class="fas fa-cog fa-lg"></i>
         </div>
     </div>
@@ -470,7 +469,7 @@
         <p>FINAL FANTASY XIV</p>
         <p> (C) SQUARE ENIX CO., LTD. All Rights Reserved.</p>
         <p> Powered by エオルゼア経済大学</p>
-        <p> Contact us <a href="https://twitter.com/Premier_XIV">プルミエ</a></p>
+        <p> Contact us <a href="https://twitter.com/Premier_XIV" target="_blank">プルミエ</a></p>
     </div>
 
     <!-- Modal -->
