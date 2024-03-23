@@ -86,13 +86,13 @@ export default {
 
 .history-table {
     overflow-y: scroll;
-    height: 100%;
 }
 
 table {
     border-collapse: collapse;
     border-spacing: 0;
     width: 100%;
+    border-radius: 5px;
 }
 
 th,
