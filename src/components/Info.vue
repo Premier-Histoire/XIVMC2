@@ -33,9 +33,11 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="details">
                     <div v-if="activeButton === 1 && info.Name !== undefined" class="Tree-box scroll_bar">
+                        <div class="memo">
+                            <p><span style="color: red;">赤字</span> は、素材から作成した方が費用が安いアイテムです。</p>
+                        </div>
                         <Tree :materialsJson="materialsJson" />
                     </div>
                     <div v-else-if="activeButton === 2 && info.Name !== undefined" class="History-box">
@@ -173,6 +175,13 @@ export default {
     margin-bottom: 5px;
 }
 
+.memo p {
+    color: white;
+    text-align: center;
+    font-size: 13px;
+    margin-bottom: 0;
+}
+
 .toggle-left {
     margin-left: auto;
     margin-right: -2.5px;
@@ -226,7 +235,6 @@ export default {
 .Tree-box {
     width: 100%;
     height: 100%;
-    margin: 20px 0 20px 0;
     box-sizing: border-box;
     overflow-y: scroll;
 }

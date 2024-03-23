@@ -8,13 +8,13 @@
       <div class="tree-data"></div>
       <div class="quantity"></div>
       <div class="flex20">1個単価:</div>
-      <div class="flex20">{{ (materialsJson.totalPrice / materialsJson.amountResult).toLocaleString() }}ギル</div>
+      <div class="flex20">{{ (materialsJson.totalPrice / materialsJson.amountResult).toLocaleString() }}<span class="xivfont"></span></div>
     </div>
     <div class="tree-item-info">
       <div class="tree-data"></div>
       <div class="quantity"></div>
       <div class="flex20">相場価格:</div>
-      <div class="flex20">{{ (materialsJson.price).toLocaleString() }}ギル</div>
+      <div class="flex20">{{ (materialsJson.price).toLocaleString() }}<span class="xivfont"></span></div>
     </div>
     <div class="tree-item-info">
       <div class="tree-data"></div>
@@ -43,7 +43,7 @@
         materialsJson.price).toLocaleString(undefined, {
           minimumFractionDigits: 0,
           maximumFractionDigits: 0
-        }) }}ギル</div>
+        }) }}<span class="xivfont"></span></div>
     </div>
     <div class="tree-item-info">
       <div class="tree-data"></div>
@@ -54,7 +54,7 @@
           materialsJson.amountResult))).toLocaleString(undefined, {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0
-          }) }}ギル
+          }) }}<span class="xivfont"></span>
       </div>
     </div>
   </div>
@@ -101,14 +101,14 @@ export default {
                 (item.lowestPrice > item.subTotalPrice && item.subTotalPrice !== 0)
                   ? item.subTotalPrice.toLocaleString()
                   : item.lowestPrice.toLocaleString()
-              }} ギル
+              }} <span class="xivfont"></span>
             </div>
             <div class="flex20" :class="{ 'red-text': item.lowestPrice > item.subTotalPrice && item.subTotalPrice !== 0 }">
               {{
                 (item.lowestPrice > item.subTotalPrice && item.subTotalPrice !== 0)
                   ? Math.ceil(item.subTotalPrice * item.quantity).toLocaleString()
                   : Math.ceil(item.lowestPrice * item.quantity).toLocaleString()
-              }} ギル
+              }} <span class="xivfont"></span>
             </div>
           <!-- 展開がある場合の条件分岐 -->
           </div>
@@ -149,6 +149,15 @@ export default {
 </script>
 
 <style>
+@font-face {
+    font-family: 'XivFont';
+    src: url('fonts/xivfont.ttf') format('truetype');
+}
+
+.xivfont {
+    font-family: 'Xivfont', sans-serif;
+}
+
 .tree-item {
   height: 40px;
   width: 100%;

@@ -16,9 +16,9 @@
                     <tbody>
                         <tr v-for="(sale, index) in materialsJson.salesHistory.entries" :key="sale.timestamp">
                             <td>{{ index + 1 }}</td>
-                            <td class="xivfont" v-if="sale.hq">HQ</td>
+                            <td class="xivfont" v-if="sale.hq"><span class="xivfont"></span></td>
                             <td v-else></td>
-                            <td class="xivfont">{{ sale.pricePerUnit.toLocaleString() }}ギル</td>
+                            <td class="xivfont">{{ sale.pricePerUnit.toLocaleString() }}<span class="xivfont"></span></td>
                             <td>{{ new Date(sale.timestamp * 1000).toLocaleDateString()
                                 }}
                             </td>
@@ -43,9 +43,9 @@
                     <tbody>
                         <tr v-for="(listing, index) in materialsJson.currentHistory.listings" :key="listing.listingID">
                             <td>{{ index + 1 }}</td>
-                            <td class="xivfont" v-if="listing.hq">HQ</td>
+                            <td class="xivfont" v-if="listing.hq"><span class="xivfont"></span></td>
                             <td v-else></td>
-                            <td class="xivfont">{{ listing.pricePerUnit.toLocaleString() }}ギル</td>
+                            <td class="xivfont">{{ listing.pricePerUnit.toLocaleString() }}<span class="xivfont"></span></td>
                             <td>{{ new Date(listing.lastReviewTime *
             1000).toLocaleDateString() }}</td>
                         </tr>
