@@ -786,7 +786,7 @@ export default {
     position: absolute;
     width: 275px;
     bottom: 20px;
-    font-size: 10px;
+    font-size: 11px;
     color: #FFF;
     text-align: center;
 }
