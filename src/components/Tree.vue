@@ -22,7 +22,7 @@
       <div class="flex20">利益率:</div>
       <div class="flex20">{{ ((materialsJson.price) / (materialsJson.totalPrice /
         materialsJson.amountResult) * 100).toLocaleString(undefined, {
-          minimumFractionDigits: 2,
+          minimumFractionDigits: 0,
           maximumFractionDigits: 2
         }) }}%</div>
     </div>
@@ -30,7 +30,10 @@
       <div class="tree-data"></div>
       <div class="quantity"></div>
       <div class="flex20">週平均売上数:</div>
-      <div class="flex20">{{ materialsJson.salesHistory.regularSaleVelocity.toFixed(2) }}個</div>
+      <div class="flex20">{{ materialsJson.salesHistory.regularSaleVelocity.toLocaleString(undefined, {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2
+        }) }}個</div>
     </div>
     <div class="tree-item-info">
       <div class="tree-data"></div>
