@@ -3,32 +3,36 @@
     <ul class="tree-frame">
       <tree-item v-for="item in materialsJson.materials" :key="item.itemId" :item="item" />
     </ul>
-    <div class="tree-item border-top">
+    <div class="border-top"></div>
+    <div class="tree-item-info" style="margin-top: 10px">
       <div class="tree-data"></div>
       <div class="quantity"></div>
       <div class="flex20">1個単価:</div>
       <div class="flex20">{{ (materialsJson.totalPrice / materialsJson.amountResult).toLocaleString() }}ギル</div>
     </div>
-    <div class="tree-item">
+    <div class="tree-item-info">
       <div class="tree-data"></div>
       <div class="quantity"></div>
       <div class="flex20">相場価格:</div>
       <div class="flex20">{{ (materialsJson.price).toLocaleString() }}ギル</div>
     </div>
-    <div class="tree-item">
+    <div class="tree-item-info">
       <div class="tree-data"></div>
       <div class="quantity"></div>
       <div class="flex20">利益率:</div>
       <div class="flex20">{{ ((materialsJson.price) / (materialsJson.totalPrice /
-        materialsJson.amountResult) * 100).toFixed(2) }}%</div>
+        materialsJson.amountResult) * 100).toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }) }}%</div>
     </div>
-    <div class="tree-item">
+    <div class="tree-item-info">
       <div class="tree-data"></div>
       <div class="quantity"></div>
       <div class="flex20">週平均売上数:</div>
       <div class="flex20">{{ materialsJson.salesHistory.regularSaleVelocity.toFixed(2) }}個</div>
     </div>
-    <div class="tree-item">
+    <div class="tree-item-info">
       <div class="tree-data"></div>
       <div class="quantity"></div>
       <div class="flex20">1日の販売額:</div>
@@ -38,15 +42,16 @@
           maximumFractionDigits: 0
         }) }}ギル</div>
     </div>
-    <div class="tree-item">
+    <div class="tree-item-info">
       <div class="tree-data"></div>
       <div class="quantity"></div>
       <div class="flex20">1日の利益額:</div>
       <div class="flex20">{{ ((materialsJson.salesHistory.regularSaleVelocity * materialsJson.price) -
-        (materialsJson.salesHistory.regularSaleVelocity * (materialsJson.totalPrice / materialsJson.amountResult))).toLocaleString(undefined, {
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0
-        }) }}ギル
+        (materialsJson.salesHistory.regularSaleVelocity * (materialsJson.totalPrice /
+          materialsJson.amountResult))).toLocaleString(undefined, {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+          }) }}ギル
       </div>
     </div>
   </div>
@@ -149,6 +154,14 @@ export default {
   margin-bottom: 10px;
 }
 
+.tree-item-info {
+  height: 20px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
 .padding-top {
   padding-top: 5px
 }
@@ -202,6 +215,7 @@ export default {
 
 .border-top {
   border-top: 1px solid white;
+  width: 100%;
 }
 
 .spaceflex {
