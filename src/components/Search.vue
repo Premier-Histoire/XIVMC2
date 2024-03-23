@@ -654,6 +654,7 @@ export default {
     top: 50%;
     right: 15px;
     transform: translateY(-50%);
+    cursor: pointer;
 }
 
 .title img {
