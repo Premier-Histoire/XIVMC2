@@ -1,7 +1,8 @@
 <template>
     <div class="title">
         <img src="../assets/img/title.png">
-        <div class="setting" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <div class="setting" data-bs-toggle="modal tooltip" data-bs-target="#exampleModal" data-bs-placement="top"
+            data-bs-custom-class="custom-tooltip" data-offset="0, 10" title="サーバー設定">
             <i class="fas fa-cog fa-lg"></i>
         </div>
     </div>
@@ -468,6 +469,8 @@
     <div class="copyright">
         <p>FINAL FANTASY XIV</p>
         <p> (C) SQUARE ENIX CO., LTD. All Rights Reserved.</p>
+        <p> Powered by エオルゼア経済大学</p>
+        <p> Contact us <a href="https://twitter.com/Premier_XIV">プルミエ</a></p>
     </div>
 
     <!-- Modal -->
@@ -482,7 +485,7 @@
                     <form>
                         <div class="mb-3">
                             <label for="data-center-select" class="col-form-label">物理データセンター:</label>
-                            <select class="form-select"  name="data-center-select" v-model="selectedPhysicalDataCenter"
+                            <select class="form-select" name="data-center-select" v-model="selectedPhysicalDataCenter"
                                 @change="clearLogicalAndServer">
                                 <option value="">空白</option>
                                 <option v-for="(physicalDataCenter, index) in physicalDataCenters"
@@ -491,7 +494,8 @@
                         </div>
                         <div class="mb-3" v-if="selectedPhysicalDataCenter">
                             <label for="data-center-select" class="col-form-label">論理データセンター:</label>
-                            <select class="form-select"  name="data-center-select" v-model="selectedLogicalDataCenter" @change="clearServer">
+                            <select class="form-select" name="data-center-select" v-model="selectedLogicalDataCenter"
+                                @change="clearServer">
                                 <option value="">空白</option>
                                 <option
                                     v-for="(logicalDataCenter, index) in logicalDataCenters[selectedPhysicalDataCenter]"
@@ -500,7 +504,7 @@
                         </div>
                         <div class="mb-3" v-if="selectedLogicalDataCenter">
                             <label for="server-select" class="col-form-label">Server:</label>
-                            <select class="form-select"  name="server-select" v-model="selectedServer">
+                            <select class="form-select" name="server-select" v-model="selectedServer">
                                 <option value="">空白</option>
                                 <option v-for="(server, index) in servers[selectedLogicalDataCenter]" :value="server"
                                     :key="index">{{ server }}</option>
