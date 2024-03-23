@@ -682,6 +682,7 @@ export default {
     font-size: 13px;
     background-color: #545454;
     border: solid 1px #454044;
+    padding-left: 10px;
     color: #fff;
 }
 
