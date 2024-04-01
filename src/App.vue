@@ -308,13 +308,12 @@ export default {
             return total + subMaterialPrice + subSubMaterialsPrice;
           }, 0);
         };
-        this.infoProgress = "最終処理中...";
         materials.forEach(material => {
           material.subTotalPrice = Math.round(calculateSubMaterialsPrice(material.subMaterials) / material.amountResult);
           material.subTotalPrice = isNaN(material.subTotalPrice) ? 0 : material.subTotalPrice;
           totalPrice += Math.min(material.lowestPrice) * material.quantity;
         });
-
+        this.infoProgress = "最終処理中...";
         return { materials, totalPrice };
       };
       const { materials, totalPrice } = await retrieveMaterials(item.ItemId, this.recipeData, this.itemsData);
