@@ -214,13 +214,19 @@ export default {
       }
     },
     async getLowestPrice(itemId) {
-      const server = localStorage.getItem('searchvalue')
-      const response = await fetch(`https://universalis.app/api/v2/${server}/${itemId}?fields=minPrice%2CminPriceHQ`);
-      const data = await response.json();
-      if (data.minPriceHQ === 0) {
-        return data.minPrice;
-      } else {
-        return data.minPriceHQ;
+      try {
+        const server = localStorage.getItem('searchvalue')
+        const response = await fetch(`https://universalis.app/api/v2/${server}/${itemId}?fields=minPrice%2CminPriceHQ`);
+        const data = await response.json();
+        if (data.minPriceHQ === 0) {
+          return data.minPrice;
+        } else {
+          return data.minPriceHQ;
+        }
+      } catch (error) {
+        console.error('salesHistory取得エラー:', error);
+        this.infoProgress = "getLowestPrice取得エラー";
+        return null;
       }
     },
     async salesHistory(itemId) {
@@ -234,6 +240,7 @@ export default {
         return data;
       } catch (error) {
         console.error('salesHistory取得エラー:', error);
+        this.infoProgress = "salesHistory取得エラー";
         return null;
       }
     },
@@ -248,6 +255,7 @@ export default {
         return data;
       } catch (error) {
         console.error('currentHistory取得エラー:', error);
+        this.infoProgress = "currentHistory取得エラー";
         return null;
       }
     },
