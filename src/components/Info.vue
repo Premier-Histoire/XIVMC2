@@ -1,7 +1,7 @@
 <template>
     <div class="info">
         <div v-if="!infoLoading" class="loading">
-            <Loading />
+            <Loading :infoProgress="infoProgress"/>
         </div>
         <div v-else>
             <div v-if="info.Name">
@@ -63,6 +63,9 @@ export default {
         },
         infoLoading: {
             type: Boolean
+        },
+        infoProgress:{
+            type: String
         }
     },
     components: {
@@ -129,6 +132,7 @@ export default {
     min-width: 100%;
     min-height: 100%;
     display: flex;
+    flex-flow: column;
     justify-content: center;
     align-items: center;
     z-index: 10;

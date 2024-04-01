@@ -13,8 +13,27 @@
         <div></div>
         <div></div>
     </div>
+    <div class="info-progress">{{ infoProgress }}</div>
 </template>
+
+<script>
+export default {
+    name: 'Loading',
+    props: {
+        infoProgress: {
+            type: String
+        }
+    },
+}
+</script>
+
+
 <style>
+.info-progress {
+    color: white;
+    font-size: 15px;
+}
+
 .lds-spinner {
     color: official;
     display: inline-block;

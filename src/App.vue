@@ -47,7 +47,8 @@
       <div class="info-header">
         <div class="info-text">詳細情報</div>
       </div>
-      <Info ref="infoComponent" :materialsJson="materialsJson" :infoLoading="infoLoading" />
+      <Info ref="infoComponent" :materialsJson="materialsJson" :infoLoading="infoLoading"
+        :infoProgress="infoProgress" />
     </div>
   </div>
 </template>
@@ -62,6 +63,7 @@ export default {
     return {
       jsonLoading: false,
       infoLoading: '',
+      infoProgress: '',
       isSelectBoxOpen: false,
       selectedServer: '',
       selectedInfo: [],
@@ -253,11 +255,10 @@ export default {
       const startTime = Date.now();
       this.infoLoading = false;
       this.$refs.infoComponent.skip(1);
-
-      const retrieveMaterials = async (itemId, recipeData, itemsData) => {
+      this.infoProgress = `必要素材を確認中...`;
+      const retrieveMaterials = async (itemId, recipeData, itemsData, check) => {
         const recipe = recipeData.find(recipe => recipe.ItemResult === itemId);
         if (!recipe) return { materials: [], totalPrice: 0 };
-
         const materials = [];
         let totalPrice = 0;
         const promises = [];
@@ -269,7 +270,10 @@ export default {
             const amountResult = subrecipe ? subrecipe.AmountResult : 0;
             const materialItem = itemsData.find(item => item.ItemId === ingredientItemId);
             if (materialItem) {
-              const subMaterialsData = await retrieveMaterials(ingredientItemId, recipeData, itemsData);
+              if (check !== "sub") {
+                this.infoProgress = `${materialItem.Name}の情報を問い合わせ中...`;
+              }
+              const subMaterialsData = await retrieveMaterials(ingredientItemId, recipeData, itemsData, "sub");
               promises.push(this.getLowestPrice(ingredientItemId));
               materials.push({
                 itemId: ingredientItemId,
@@ -304,7 +308,6 @@ export default {
 
         return { materials, totalPrice };
       };
-
       const { materials, totalPrice } = await retrieveMaterials(item.ItemId, this.recipeData, this.itemsData);
 
       const amoutrecipe = this.recipeData.find(recipe => recipe.ItemResult === item.ItemId);
@@ -323,6 +326,7 @@ export default {
         salesHistory,
         currentHistory
       };
+      this.infoProgress = "最終処理中...";
       console.log(this.materialsJson);
       this.infoLoading = true;
 
