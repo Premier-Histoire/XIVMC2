@@ -1,8 +1,4 @@
-<script setup>
-  import { SpeedInsights } from '@vercel/speed-insights/vue';
-</script>
 <template>
-  <SpeedInsights />
   <div class="contents">
     <div v-if="!jsonLoading" class="loading-full">
       <Loading />
