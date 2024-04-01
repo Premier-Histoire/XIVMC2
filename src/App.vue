@@ -226,7 +226,7 @@ export default {
     async salesHistory(itemId) {
       try {
         const server = localStorage.getItem('searchvalue')
-        const response = await fetch(`https://universalis.app/api/v2/history/${server}/${itemId}?entriesToReturn=100`);
+        const response = await fetch(`https://universalis.app/api/v2/history/${server}/${itemId}`);
         if (!response.ok) {
           throw new Error('サーバーからの応答がありません');
         }
@@ -259,6 +259,7 @@ export default {
       const retrieveMaterials = async (itemId, recipeData, itemsData, check) => {
         const recipe = recipeData.find(recipe => recipe.ItemResult === itemId);
         if (!recipe) return { materials: [], totalPrice: 0 };
+
         const materials = [];
         let totalPrice = 0;
         const promises = [];
@@ -299,7 +300,7 @@ export default {
             return total + subMaterialPrice + subSubMaterialsPrice;
           }, 0);
         };
-
+        this.infoProgress = "最終処理中...";
         materials.forEach(material => {
           material.subTotalPrice = Math.round(calculateSubMaterialsPrice(material.subMaterials) / material.amountResult);
           material.subTotalPrice = isNaN(material.subTotalPrice) ? 0 : material.subTotalPrice;
@@ -326,7 +327,6 @@ export default {
         salesHistory,
         currentHistory
       };
-      this.infoProgress = "最終処理中...";
       console.log(this.materialsJson);
       this.infoLoading = true;
 

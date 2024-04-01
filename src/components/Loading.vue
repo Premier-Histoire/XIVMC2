@@ -32,6 +32,7 @@ export default {
 .info-progress {
     color: white;
     font-size: 15px;
+    margin-top: 10px;
 }
 
 .lds-spinner {
