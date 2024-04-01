@@ -7,7 +7,7 @@
     </div>
     <div class="freesearch">
         <div class="subtext">FREE SEARCH</div>
-        <input class="search-input" type="text" v-model="searchQuery" @keyup.enter="ItemSearch">
+        <input class="search-input" name="search-input" type="text" v-model="searchQuery" @keyup.enter="ItemSearch">
     </div>
     <div class="main-weapon category-button">
         <div class="subtext">MAIN ARM/SUB ARM</div>
@@ -172,7 +172,7 @@
         <div class="level-selector-container">
             <div class="level-selector">
                 <span class="leveltext">Lv</span>
-                <input type="text" class="level-input" v-model="mainArmSubArmLevel">
+                <input type="text" class="level-input" name="level-input" v-model="mainArmSubArmLevel">
                 <button class="level-up" @click="incrementLevel('main')">+</button>
                 <button class="level-down" @click="decrementLevel('main')">-</button>
             </div>
@@ -234,13 +234,13 @@
         <div class="level-selector-container">
             <div class="level-selector">
                 <span class="leveltext">Lv</span>
-                <input type="text" class="level-input" v-model="armorAccessoryLevel">
+                <input type="text" class="level-input" name="level-input" v-model="armorAccessoryLevel">
                 <button class="level-up" @click="incrementLevel()">+</button>
                 <button class="level-down" @click="decrementLevel()">-</button>
             </div>
         </div>
         <div class="select-job">
-            <select class="select-box" v-model="selectedJob">
+            <select class="select-box" name="select-box" v-model="selectedJob">
                 <option value="ADV">すべて表示</option>
                 <option value="PLD">ナイト</option>
                 <option value="GLA">剣術士</option>
@@ -483,8 +483,8 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="data-center-select" class="col-form-label">物理データセンター:</label>
-                            <select class="form-select" name="data-center-select" v-model="selectedPhysicalDataCenter"
+                            <label for="physics-center-select" class="col-form-label">物理データセンター:</label>
+                            <select class="form-select" id="physics-center-select" name="physics-center-select" v-model="selectedPhysicalDataCenter"
                                 @change="clearLogicalAndServer">
                                 <option value="">空白</option>
                                 <option v-for="(physicalDataCenter, index) in physicalDataCenters"
@@ -493,7 +493,7 @@
                         </div>
                         <div class="mb-3" v-if="selectedPhysicalDataCenter">
                             <label for="data-center-select" class="col-form-label">論理データセンター:</label>
-                            <select class="form-select" name="data-center-select" v-model="selectedLogicalDataCenter"
+                            <select class="form-select" id="data-center-select" name="data-center-select" v-model="selectedLogicalDataCenter"
                                 @change="clearServer">
                                 <option value="">空白</option>
                                 <option
@@ -502,8 +502,8 @@
                             </select>
                         </div>
                         <div class="mb-3" v-if="selectedLogicalDataCenter">
-                            <label for="server-select" class="col-form-label">Server:</label>
-                            <select class="form-select" name="server-select" v-model="selectedServer">
+                            <label for="server-select" class="col-form-label">サーバー:</label>
+                            <select class="form-select" id="server-select" name="server-select" v-model="selectedServer">
                                 <option value="">空白</option>
                                 <option v-for="(server, index) in servers[selectedLogicalDataCenter]" :value="server"
                                     :key="index">{{ server }}</option>

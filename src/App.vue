@@ -20,7 +20,7 @@
         <div :class="{ 'result-text': true, 'freesearch-text': searchinfo.id === undefined }">{{ this.searchinfo.text }}
         </div>
       </div>
-      <div :class="['result-items scroll_bar', { 'result-items-close': !isSearchBoxOpen }]" >
+      <div :class="['result-items scroll_bar', { 'result-items-close': !isSearchBoxOpen }]">
         <div class="result-margin">
           <div ref="scrollableElement" class="result-itemlist scroll_bar">
             <div class="result-item" v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
@@ -191,7 +191,7 @@ export default {
           this.infoLoading = true;
         });
       } else {
-        if(this.infoLoading === false){
+        if (this.infoLoading === false) {
           alert("別の詳細検索がすでに実行中です。");
         } else {
           this.getMaterialDetails(item);
@@ -213,7 +213,7 @@ export default {
     },
     async getLowestPrice(itemId) {
       const server = localStorage.getItem('searchvalue')
-      const response = await fetch(`https://universalis.app/api/${server}/${itemId}?fields=minPrice%2CminPriceHQ`);
+      const response = await fetch(`https://universalis.app/api/v2/${server}/${itemId}?fields=minPrice%2CminPriceHQ`);
       const data = await response.json();
       if (data.minPriceHQ === 0) {
         return data.minPrice;
@@ -250,86 +250,85 @@ export default {
       }
     },
     async getMaterialDetails(item) {
+      const startTime = Date.now();
       this.infoLoading = false;
       this.$refs.infoComponent.skip(1);
-      const retrieveMaterials = async (itemId) => {
-        const recipe = this.recipeData.find(recipe => recipe.ItemResult === itemId);
-        if (recipe) {
-          const materials = [];
-          let totalPrice = 0; // 合計価格を計算するための変数を追加
-          const promises = []; // 各素材の最安値取得用のPromise配列を定義
-          for (let i = 0; i <= 9; i++) {
-            const ingredientItemId = recipe[`ItemIngredient[${i}]`];
-            const ingredientQuantity = recipe[`AmountIngredient[${i}]`];
-            if (ingredientItemId && ingredientQuantity > 0) {
-              const subrecipe = this.recipeData.find(recipe => recipe.ItemResult === ingredientItemId);
-              const amountResult = subrecipe ? subrecipe.AmountResult : 0; // AmountResult をサブレシピから取得
-              const materialItem = this.itemsData.find(item => item.ItemId === ingredientItemId);
-              if (materialItem) {
-                const subMaterialsData = await retrieveMaterials(ingredientItemId);
-                promises.push(this.getLowestPrice(ingredientItemId)); // 各素材の最安値取得用のPromiseを追加
-                materials.push({
-                  itemId: ingredientItemId,
-                  itemName: materialItem.Name,
-                  Icon: materialItem.Icon,
-                  quantity: ingredientQuantity,
-                  isCraftable: this.isCraftable(ingredientItemId),
-                  subMaterials: subMaterialsData.materials, // subMaterials を直接受け取る
-                  amountResult: amountResult
-                });
-              }
+
+      const retrieveMaterials = async (itemId, recipeData, itemsData) => {
+        const recipe = recipeData.find(recipe => recipe.ItemResult === itemId);
+        if (!recipe) return { materials: [], totalPrice: 0 };
+
+        const materials = [];
+        let totalPrice = 0;
+        const promises = [];
+        for (let i = 0; i <= 9; i++) {
+          const ingredientItemId = recipe[`ItemIngredient[${i}]`];
+          const ingredientQuantity = recipe[`AmountIngredient[${i}]`];
+          if (ingredientItemId && ingredientQuantity > 0) {
+            const subrecipe = recipeData.find(recipe => recipe.ItemResult === ingredientItemId);
+            const amountResult = subrecipe ? subrecipe.AmountResult : 0;
+            const materialItem = itemsData.find(item => item.ItemId === ingredientItemId);
+            if (materialItem) {
+              const subMaterialsData = await retrieveMaterials(ingredientItemId, recipeData, itemsData);
+              promises.push(this.getLowestPrice(ingredientItemId));
+              materials.push({
+                itemId: ingredientItemId,
+                itemName: materialItem.Name,
+                Icon: materialItem.Icon,
+                quantity: ingredientQuantity,
+                isCraftable: this.isCraftable(ingredientItemId),
+                subMaterials: subMaterialsData.materials,
+                amountResult
+              });
             }
           }
-          // 並列処理で全ての最安値取得API呼び出しを待つ
-          const lowestPrices = await Promise.all(promises);
-          // 各素材に最安値を追加
-          materials.forEach((material, index) => {
-            material.lowestPrice = lowestPrices[index];
-          });
-
-          // subMaterials内の合計価格を計算
-          const calculateSubMaterialsPrice = (subMaterials) => {
-            let totalSubMaterialsPrice = 0;
-            subMaterials.forEach(subMaterial => {
-              totalSubMaterialsPrice += subMaterial.quantity * subMaterial.lowestPrice;
-              if (subMaterial.subMaterials && subMaterial.subMaterials.length > 0) {
-                totalSubMaterialsPrice += calculateSubMaterialsPrice(subMaterial.subMaterials);
-              }
-            });
-            return totalSubMaterialsPrice;
-          };
-
-          // materials内の各素材のsubMaterials内の合計価格を計算
-          materials.forEach(material => {
-            material.subTotalPrice = Math.round(calculateSubMaterialsPrice(material.subMaterials) / material.amountResult);
-            // NaNを0に修正
-            material.subTotalPrice = isNaN(material.subTotalPrice) ? 0 : material.subTotalPrice;
-            const materialPrice = Math.min(material.lowestPrice); // 最安値のみ使用する
-            totalPrice += materialPrice * material.quantity;
-          });
-
-          return { materials, totalPrice }; // 素材と合計価格を返す
         }
-        return { materials: [], totalPrice: 0 }; // recipe が見つからなかった場合に空の素材配列と totalPrice 0 を返す
-      }
-      const { materials, totalPrice } = await retrieveMaterials(item.ItemId);
+        const lowestPrices = await Promise.all(promises);
+        materials.forEach((material, index) => {
+          material.lowestPrice = lowestPrices[index];
+        });
+
+        const calculateSubMaterialsPrice = (subMaterials) => {
+          return subMaterials.reduce((total, subMaterial) => {
+            const subMaterialPrice = subMaterial.quantity * subMaterial.lowestPrice;
+            const subSubMaterialsPrice = subMaterial.subMaterials ? calculateSubMaterialsPrice(subMaterial.subMaterials) : 0;
+            return total + subMaterialPrice + subSubMaterialsPrice;
+          }, 0);
+        };
+
+        materials.forEach(material => {
+          material.subTotalPrice = Math.round(calculateSubMaterialsPrice(material.subMaterials) / material.amountResult);
+          material.subTotalPrice = isNaN(material.subTotalPrice) ? 0 : material.subTotalPrice;
+          totalPrice += Math.min(material.lowestPrice) * material.quantity;
+        });
+
+        return { materials, totalPrice };
+      };
+
+      const { materials, totalPrice } = await retrieveMaterials(item.ItemId, this.recipeData, this.itemsData);
+
       const amoutrecipe = this.recipeData.find(recipe => recipe.ItemResult === item.ItemId);
       const amountResult = amoutrecipe ? amoutrecipe.AmountResult : 0;
-      const [salesHistory, currentHistory, materialPrice] = await Promise.all([
+
+      const [salesHistory, currentHistory] = await Promise.all([
         this.salesHistory(item.ItemId),
         this.currentHistory(item.ItemId),
-        this.getLowestPrice(item.ItemId)
       ]);
+
       this.materialsJson = {
         materials,
-        totalPrice, // 合計価格を保持
-        price: materialPrice, // 素材の価格を保持
+        totalPrice,
+        price: currentHistory.minPrice,
         amountResult,
         salesHistory,
         currentHistory
       };
       console.log(this.materialsJson);
       this.infoLoading = true;
+
+      const endTime = Date.now();
+      const elapsedTime = endTime - startTime;
+      console.log(`処理が完了するまでの時間：${elapsedTime}ミリ秒`);
     }
   }
 }
