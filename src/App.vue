@@ -8,23 +8,23 @@
         <Search @send-data="SearchItems" />
       </div>
     </div>
-    <div class="result-box">
-      <div :class="['result-header', { 'result-header-close': !isSearchBoxOpen }]" @click="toggleSearchBox">
+    <ul class="result-box">
+      <li :class="['result-header', { 'result-header-close': !isSearchBoxOpen }]" @click="toggleSearchBox">
         <div class="toggle-search-box">
-          <span v-if="this.isSearchBoxOpen"><i class="fas fa-chevron-left" /></span>
-          <span v-else><i class="fas fa-chevron-right" /></span>
+          <span v-if="this.isSearchBoxOpen"><i class="fas fa-chevron-left"></i></span>
+          <span v-else><i class="fas fa-chevron-right"></i></span>
         </div>
         <div class="result-img">
-          <img v-if="searchinfo.id !== undefined" :src="imageSrc">
+          <img v-if="searchinfo.id !== undefined" :src="imageSrc" alt="Result Image">
         </div>
         <div :class="{ 'result-text': true, 'freesearch-text': searchinfo.id === undefined }">{{ this.searchinfo.text }}
         </div>
-      </div>
-      <div :class="['result-items scroll_bar', { 'result-items-close': !isSearchBoxOpen }]">
+      </li>
+      <li :class="['result-items scroll_bar', { 'result-items-close': !isSearchBoxOpen }]">
         <div class="result-margin">
-          <div ref="scrollableElement" class="result-itemlist scroll_bar">
-            <div class="result-item" v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
-              :class="{ 'last-item': index === searchResults.length - 1 }">
+          <ul ref="scrollableElement" class="result-itemlist scroll_bar">
+            <li v-for="(item, index) in searchResults" :key="item" @click="selectItem(item)"
+              :class="{ 'last-item': index === searchResults.length - 1 }" class="result-item">
               <div class="item-icon">
                 <img :src="`/icons/normal/${item.Icon}.png`" alt="Icon">
               </div>
@@ -32,17 +32,17 @@
               <div class="loadstone" @click.stop="">
                 <a :href="'https://jp.finalfantasyxiv.com/lodestone/playguide/db/item/' + item.loadstoneid"
                   class="eorzeadb_link" target="_blank">
-                  <img src="./assets/img/lodestone.png">
+                  <img src="./assets/img/lodestone.png" alt="Loadstone">
                 </a>
               </div>
               <div class="item-craftable">
-                <img v-if="item.isCraftable" src="./assets/img/craft.png">
+                <img v-if="item.isCraftable" src="./assets/img/craft.png" alt="Craftable">
               </div>
-            </div>
-          </div>
+            </li>
+          </ul>
         </div>
-      </div>
-    </div>
+      </li>
+    </ul>
     <div class="info-box">
       <div class="info-header">
         <div class="info-text">詳細情報</div>
@@ -458,6 +458,7 @@ export default {
   overflow-y: scroll;
   margin-top: 10px;
   margin-bottom: 10px;
+  padding-left: 15px;
 }
 
 .result-item {
