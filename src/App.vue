@@ -264,6 +264,7 @@ export default {
       this.infoLoading = false;
       this.$refs.infoComponent.skip(1);
       this.infoProgress = `必要素材を確認中...`;
+
       const retrieveMaterials = async (itemId, recipeData, itemsData, check) => {
         const recipe = recipeData.find(recipe => recipe.ItemResult === itemId);
         if (!recipe) return { materials: [], totalPrice: 0 };
@@ -316,30 +317,37 @@ export default {
         this.infoProgress = "最終処理中...";
         return { materials, totalPrice };
       };
-      const { materials, totalPrice } = await retrieveMaterials(item.ItemId, this.recipeData, this.itemsData);
 
-      const amoutrecipe = this.recipeData.find(recipe => recipe.ItemResult === item.ItemId);
-      const amountResult = amoutrecipe ? amoutrecipe.AmountResult : 0;
+      try {
+        const { materials, totalPrice } = await retrieveMaterials(item.ItemId, this.recipeData, this.itemsData);
 
-      const [salesHistory, currentHistory] = await Promise.all([
-        this.salesHistory(item.ItemId),
-        this.currentHistory(item.ItemId),
-      ]);
+        const amoutrecipe = this.recipeData.find(recipe => recipe.ItemResult === item.ItemId);
+        const amountResult = amoutrecipe ? amoutrecipe.AmountResult : 0;
 
-      this.materialsJson = {
-        materials,
-        totalPrice,
-        price: currentHistory.minPrice,
-        amountResult,
-        salesHistory,
-        currentHistory
-      };
-      console.log(this.materialsJson);
-      this.infoLoading = true;
+        const [salesHistory, currentHistory] = await Promise.all([
+          this.salesHistory(item.ItemId),
+          this.currentHistory(item.ItemId),
+        ]);
 
-      const endTime = Date.now();
-      const elapsedTime = endTime - startTime;
-      console.log(`処理が完了するまでの時間：${elapsedTime}ミリ秒`);
+        this.materialsJson = {
+          materials,
+          totalPrice,
+          price: currentHistory.minPrice,
+          amountResult,
+          salesHistory,
+          currentHistory
+        };
+        console.log(this.materialsJson);
+      } catch (error) {
+        console.error('エラーが発生しました:', error);
+        this.infoProgress = "データの取得中にエラーが発生しました";
+      } finally {
+        this.infoLoading = true;
+
+        const endTime = Date.now();
+        const elapsedTime = endTime - startTime;
+        console.log(`処理が完了するまでの時間：${elapsedTime}ミリ秒`);
+      }
     }
   }
 }
@@ -352,7 +360,7 @@ export default {
   display: flex;
   border-image-source: url(./assets/img/bordergate.png);
   border-image-slice: 100 fill;
-  border-image-width: 100px;
+  border-image-width: 150px;
   border-image-outset: 0px;
   border-image-repeat: round;
 }
@@ -362,7 +370,7 @@ export default {
   min-height: 100%;
   border-image-source: url(./assets/img/bordergate.png);
   border-image-slice: 100 fill;
-  border-image-width: 100px;
+  border-image-width: 150px;
   border-image-outset: 0px;
   border-image-repeat: round;
   display: flex;
@@ -405,6 +413,7 @@ export default {
   display: flex;
   align-items: center;
   flex-direction: column;
+  padding-inline-start: 0;
 }
 
 .result-margin {
