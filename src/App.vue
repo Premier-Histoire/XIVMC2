@@ -360,7 +360,7 @@ export default {
   display: flex;
   border-image-source: url(./assets/img/bordergate.png);
   border-image-slice: 100 fill;
-  border-image-width: 150px;
+  border-image-width: 100px;
   border-image-outset: 0px;
   border-image-repeat: round;
 }
@@ -370,7 +370,7 @@ export default {
   min-height: 100%;
   border-image-source: url(./assets/img/bordergate.png);
   border-image-slice: 100 fill;
-  border-image-width: 150px;
+  border-image-width: 100px;
   border-image-outset: 0px;
   border-image-repeat: round;
   display: flex;
