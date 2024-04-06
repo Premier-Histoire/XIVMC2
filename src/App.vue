@@ -260,6 +260,14 @@ export default {
       }
     },
     async getMaterialDetails(item) {
+            // サイトを離れる際の確認
+      window.addEventListener('beforeunload', (event) => {
+        // イベントをキャンセルして確認ダイアログを表示
+        event.preventDefault();
+        // Chrome と Firefox にメッセージを表示
+        event.returnValue = 'ページを離れようとしています。';
+      });
+      
       const startTime = Date.now();
       this.infoLoading = false;
       this.$refs.infoComponent.skip(1);
@@ -343,7 +351,10 @@ export default {
         this.infoProgress = "データの取得中にエラーが発生しました";
       } finally {
         this.infoLoading = true;
-
+        
+        // ページを離れる際の確認を解除
+        window.removeEventListener('beforeunload', beforeUnloadListener);
+        
         const endTime = Date.now();
         const elapsedTime = endTime - startTime;
         console.log(`処理が完了するまでの時間：${elapsedTime}ミリ秒`);
