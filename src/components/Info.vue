@@ -77,6 +77,7 @@ export default {
         return {
             activeButton: 1,
             info: [],
+            materials: {},
         }
     },
     mounted() {
