@@ -123,7 +123,7 @@ export default {
     display: flex;
     flex-direction: column;
     width: calc(100% - 6.5px);
-    height: calc(100% - 45px);
+    height: calc(100% - 35px);
     border-left: 2px solid #555455;
 }
 
@@ -230,7 +230,7 @@ export default {
 
 .details {
     width: calc(100% - 6px);
-    height: calc(100vh - 240px);
+    height: calc(100vh - 235px);
     color: white;
     list-style-type: none;
     overflow: hidden;

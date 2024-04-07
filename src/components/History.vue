@@ -18,7 +18,8 @@
                             <td>{{ index + 1 }}</td>
                             <td class="xivfont" v-if="sale.hq"><span class="xivfont"></span></td>
                             <td v-else></td>
-                            <td class="xivfont">{{ sale.pricePerUnit.toLocaleString() }}<span class="xivfont"></span></td>
+                            <td class="xivfont">{{ sale.pricePerUnit.toLocaleString() }}<span class="xivfont"></span>
+                            </td>
                             <td>{{ new Date(sale.timestamp * 1000).toLocaleDateString()
                                 }}
                             </td>
@@ -45,13 +46,43 @@
                             <td>{{ index + 1 }}</td>
                             <td class="xivfont" v-if="listing.hq"><span class="xivfont"></span></td>
                             <td v-else></td>
-                            <td class="xivfont">{{ listing.pricePerUnit.toLocaleString() }}<span class="xivfont"></span></td>
+                            <td class="xivfont">{{ listing.pricePerUnit.toLocaleString() }}<span
+                                    class="xivfont"></span></td>
                             <td>{{ new Date(listing.lastReviewTime *
-            1000).toLocaleDateString() }}</td>
+                                1000).toLocaleDateString() }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+    <div class="item-info">
+        <div class="tree-item-info" style="margin-top: 10px">
+            <div class="tree-data"></div>
+            <div class="quantity"></div>
+            <div class="flex20">1個単価:</div>
+            <div class="flex20">{{ (materialsJson.currentHistory.minPrice).toLocaleString() }}<span
+                    class="xivfont"></span></div>
+        </div>
+        <div class="tree-item-info" style="margin-top: 10px">
+            <div class="tree-data"></div>
+            <div class="quantity"></div>
+            <div class="flex20">週平均売上数:</div>
+            <div class="flex20">{{ (materialsJson.currentHistory.regularSaleVelocity).toLocaleString(undefined, {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            }) }}個</div>
+        </div>
+        <div class="tree-item-info" style="margin-top: 10px">
+            <div class="tree-data"></div>
+            <div class="quantity"></div>
+            <div class="flex20">1日の販売額:</div>
+            <div class="flex20">{{
+                (materialsJson.currentHistory.regularSaleVelocity *
+                    materialsJson.currentHistory.minPrice).toLocaleString(undefined, {
+                        minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+                }) }}<span class="xivfont"></span></div>
         </div>
     </div>
 </template>
@@ -71,10 +102,17 @@ export default {
 <style>
 .history {
     width: 100%;
-    height: 95%;
+    height: 88%;
     padding: 0px 10px 0px 10px;
     display: flex;
     gap: 10px;
+}
+
+.item-info {
+    height: 100px;
+    margin-top: 5px;
+    margin-right: 10px;
+    margin-bottom: 5px;
 }
 
 .history-section {
@@ -87,7 +125,7 @@ export default {
 
 .history-table {
     overflow-y: scroll;
-    height: 100%;
+    height: calc(100% - 30px);
 }
 
 table {
@@ -139,5 +177,4 @@ td {
     background: #434857;
     z-index: -1;
 }
-
 </style>
