@@ -206,8 +206,9 @@ export default {
         const currentHistory = await this.currentHistory(item.ItemId)
         this.materialsJson = {
           salesHistory,
-          currentHistory
+          currentHistory,
         };
+        console.log(this.materialsJson)
       } catch (error) {
         console.error('salesHistory取得エラー:', error);
         return null;
@@ -425,6 +426,7 @@ export default {
   align-items: center;
   flex-direction: column;
   padding-inline-start: 0;
+  margin-bottom: 0;
 }
 
 .result-margin {
