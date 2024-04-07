@@ -102,7 +102,7 @@ export default {
 <style>
 .history {
     width: 100%;
-    height: 88%;
+    height: calc(100% - 110px);
     padding: 0px 10px 0px 10px;
     display: flex;
     gap: 10px;
@@ -110,9 +110,9 @@ export default {
 
 .item-info {
     height: 100px;
+    font-size: 14px;
     margin-top: 5px;
     margin-right: 10px;
-    margin-bottom: 5px;
 }
 
 .history-section {

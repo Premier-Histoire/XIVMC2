@@ -123,7 +123,7 @@ export default {
     display: flex;
     flex-direction: column;
     width: calc(100% - 6.5px);
-    height: calc(100% - 35px);
+    height: calc(100% - 43px);
     border-left: 2px solid #555455;
 }
 
